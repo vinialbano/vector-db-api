@@ -1,0 +1,25 @@
+from vector_db_api.api.documents.update_chunk import (
+    UpdateChunkRequest,
+    update_chunk,
+)
+from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.application.documents import UpdateChunkHandler
+
+
+def test_update_chunk_endpoint(document_factory):
+    repo = InMemoryDocumentRepository()
+    handler = UpdateChunkHandler(repo)
+
+    doc = document_factory()
+    repo.save(doc)
+    chunk = doc.chunks[0]
+
+    req = UpdateChunkRequest(text="updated text")
+    res = update_chunk(
+        document_id=str(doc.id), chunk_id=str(chunk.id), request=req, handler=handler
+    )
+
+    assert res.document_id == str(doc.id)
+    assert res.chunk_id == str(chunk.id)
+    updated = repo.find_by_id(doc.id)
+    assert updated.chunks[0].text == "updated text"
