@@ -62,3 +62,26 @@ def test_document_touch_metadata_on_add_remove_update(document_factory, chunk_fa
     before3 = doc.metadata.updated_at
     doc.update_chunk(c2.id, text="changed")
     assert doc.metadata.updated_at > before3
+
+
+def test_document_contains_chunk(document_factory, chunk_factory):
+    c1 = chunk_factory()
+    c2 = chunk_factory()
+    doc = document_factory(chunks=[c1])
+
+    assert doc.contains_chunk(c1.id) is True
+    assert doc.contains_chunk(c2.id) is False
+
+
+def test_document_get_chunk(document_factory, chunk_factory):
+    c1 = chunk_factory()
+    c2 = chunk_factory()
+    doc = document_factory(chunks=[c1])
+
+    assert doc.get_chunk(c1.id) is c1
+
+    try:
+        doc.get_chunk(c2.id)
+        assert False, "expected ValueError"
+    except ValueError:
+        pass

@@ -80,3 +80,13 @@ class Document:
     def contains_chunk(self, chunk_id: ChunkId) -> bool:
         """Return True if this document contains a chunk with the given id."""
         return any(c.id == chunk_id for c in self.chunks)
+
+    def get_chunk(self, chunk_id: ChunkId) -> Chunk:
+        """Return the chunk with the given id.
+
+        Raises ValueError if chunk not found.
+        """
+        for c in self.chunks:
+            if c.id == chunk_id:
+                return c
+        raise ValueError(f"Chunk {chunk_id} not found in document {self.id}")

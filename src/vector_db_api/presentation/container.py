@@ -2,24 +2,33 @@ from fastapi import Depends
 
 from vector_db_api.application.commands.documents import (
     AddChunkHandler,
-    UpdateDocumentHandler,
     CreateDocumentHandler,
+    UpdateDocumentHandler,
 )
 from vector_db_api.application.commands.documents.delete_chunk import DeleteChunkHandler
-from vector_db_api.application.commands.documents.delete_document import DeleteDocumentHandler
+from vector_db_api.application.commands.documents.delete_document import (
+    DeleteDocumentHandler,
+)
 from vector_db_api.application.commands.documents.update_chunk import UpdateChunkHandler
 from vector_db_api.application.commands.libraries import (
+    AddDocumentHandler,
     CreateLibraryHandler,
     DeleteLibraryHandler,
     IndexLibraryHandler,
+    RemoveDocumentHandler,
     UpdateLibraryHandler,
 )
-from vector_db_api.application.commands.libraries import (
-    AddDocumentHandler,
-    RemoveDocumentHandler,
+from vector_db_api.application.queries.documents import (
+    GetChunkHandler,
+    GetDocumentHandler,
 )
+from vector_db_api.application.queries.libraries import GetLibraryHandler
 from vector_db_api.domain.documents import DocumentRepository
-from vector_db_api.domain.libraries import KDTreeIndex, LibraryIndexerService, LibraryRepository
+from vector_db_api.domain.libraries import (
+    KDTreeIndex,
+    LibraryIndexerService,
+    LibraryRepository,
+)
 from vector_db_api.infrastructure.repositories import (
     InMemoryDocumentRepository,
     InMemoryLibraryRepository,
@@ -155,3 +164,26 @@ def get_remove_document_handler(
 ) -> RemoveDocumentHandler:
     """DI provider for RemoveDocumentHandler"""
     return RemoveDocumentHandler(library_repo, document_repo)
+
+
+# --------------
+# Query Handlers
+# --------------
+
+
+def get_get_document_handler(
+    document_repo: DocumentRepository = Depends(get_document_repository),
+) -> GetDocumentHandler:
+    return GetDocumentHandler(document_repo)
+
+
+def get_get_chunk_handler(
+    document_repo: DocumentRepository = Depends(get_document_repository),
+) -> GetChunkHandler:
+    return GetChunkHandler(document_repo)
+
+
+def get_get_library_handler(
+    library_repo: LibraryRepository = Depends(get_library_repository),
+) -> GetLibraryHandler:
+    return GetLibraryHandler(library_repo)
