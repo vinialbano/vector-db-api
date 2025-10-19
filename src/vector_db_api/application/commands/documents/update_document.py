@@ -14,7 +14,7 @@ class UpdateDocumentCommand:
 
 @dataclass
 class UpdateDocumentResult:
-    id: str
+    document_id: str
 
 
 @dataclass
@@ -34,4 +34,4 @@ class UpdateDocumentHandler:
         )
         self._repository.save(document)
 
-        return UpdateDocumentResult(id=str(doc_id))
+        return UpdateDocumentResult(document_id=str(doc_id))

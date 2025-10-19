@@ -10,7 +10,7 @@ class DeleteDocumentCommand:
 
 @dataclass
 class DeleteDocumentResult:
-    id: str
+    document_id: str
     deleted: bool
 
 
@@ -24,4 +24,4 @@ class DeleteDocumentHandler:
     def handle(self, command: DeleteDocumentCommand) -> DeleteDocumentResult:
         document_id = DocumentId.from_string(command.document_id)
         deleted = self._repository.delete(document_id)
-        return DeleteDocumentResult(id=str(document_id), deleted=deleted)
+        return DeleteDocumentResult(document_id=str(document_id), deleted=deleted)
