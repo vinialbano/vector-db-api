@@ -1,8 +1,8 @@
-from vector_db_api.application.documents import (
+from app.application.documents import (
     GetDocumentQuery,
     GetDocumentHandler,
 )
-from vector_db_api.infrastructure import InMemoryDocumentRepository
+from app.infrastructure import InMemoryDocumentRepository
 
 
 def test_get_document_happy_path(document_factory):

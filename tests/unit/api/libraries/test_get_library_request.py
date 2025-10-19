@@ -1,6 +1,6 @@
-from vector_db_api.api.libraries.v1.get_library import get_library
-from vector_db_api.application.libraries import GetLibraryHandler
-from vector_db_api.infrastructure import InMemoryLibraryRepository
+from app.api.libraries.v1.get_library import get_library
+from app.application.libraries import GetLibraryHandler
+from app.infrastructure import InMemoryLibraryRepository
 
 
 def test_get_library_presentation(library_factory):

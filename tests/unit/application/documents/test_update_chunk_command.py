@@ -1,10 +1,10 @@
 import pytest
 
-from vector_db_api.application.documents import (
+from app.application.documents import (
     UpdateChunkCommand,
     UpdateChunkHandler,
 )
-from vector_db_api.infrastructure import InMemoryDocumentRepository
+from app.infrastructure import InMemoryDocumentRepository
 
 
 def test_update_chunk_happy_path(document_factory, chunk_factory):

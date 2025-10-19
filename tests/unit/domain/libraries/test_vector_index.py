@@ -1,7 +1,7 @@
 import pytest
 
-from vector_db_api.domain.documents import Chunk, ChunkId, ChunkMetadata, Embedding
-from vector_db_api.domain.libraries import BruteForceIndex, KDTreeIndex
+from app.domain.documents import Chunk, ChunkId, ChunkMetadata, Embedding
+from app.domain.libraries import BruteForceIndex, KDTreeIndex
 
 
 @pytest.fixture

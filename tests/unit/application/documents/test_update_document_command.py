@@ -1,9 +1,9 @@
-from vector_db_api.application.documents import (
+from app.application.documents import (
     UpdateDocumentCommand,
     UpdateDocumentHandler,
 )
-from vector_db_api.domain.documents import Document, DocumentId, DocumentMetadata
-from vector_db_api.infrastructure import InMemoryDocumentRepository
+from app.domain.documents import Document, DocumentId, DocumentMetadata
+from app.infrastructure import InMemoryDocumentRepository
 
 
 def test_update_document_metadata_happy_path():

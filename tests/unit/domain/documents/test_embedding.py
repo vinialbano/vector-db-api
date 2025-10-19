@@ -1,6 +1,6 @@
 import pytest
 
-from vector_db_api.domain.documents.embedding import Embedding
+from app.domain.documents.embedding import Embedding
 
 
 def test_embedding_creation():

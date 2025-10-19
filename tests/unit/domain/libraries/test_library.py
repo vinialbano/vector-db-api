@@ -1,6 +1,6 @@
 import pytest
 
-from vector_db_api.domain.libraries import BruteForceIndex, Library, LibraryId, LibraryMetadata
+from app.domain.libraries import BruteForceIndex, Library, LibraryId, LibraryMetadata
 
 
 def test_library_creation(library_factory):

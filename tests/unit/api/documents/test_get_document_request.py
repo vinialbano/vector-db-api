@@ -1,6 +1,6 @@
-from vector_db_api.api.documents.v1.get_document import get_document
-from vector_db_api.application.documents import GetDocumentHandler
-from vector_db_api.infrastructure import InMemoryDocumentRepository
+from app.api.documents.v1.get_document import get_document
+from app.application.documents import GetDocumentHandler
+from app.infrastructure import InMemoryDocumentRepository
 
 
 def test_get_document_presentation(document_factory):

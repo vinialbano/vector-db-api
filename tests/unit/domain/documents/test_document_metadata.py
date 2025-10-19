@@ -1,4 +1,4 @@
-from vector_db_api.domain.documents import DocumentMetadata
+from app.domain.documents import DocumentMetadata
 
 
 def test_documentmetadata_updated_preserves_created_at():

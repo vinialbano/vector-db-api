@@ -1,9 +1,9 @@
-from vector_db_api.api.libraries.v1.update_library import (
+from app.api.libraries.v1.update_library import (
     UpdateLibraryRequest,
     update_library,
 )
-from vector_db_api.infrastructure import InMemoryLibraryRepository
-from vector_db_api.application.libraries import UpdateLibraryHandler
+from app.infrastructure import InMemoryLibraryRepository
+from app.application.libraries import UpdateLibraryHandler
 
 
 def test_update_library_endpoint(library_factory):

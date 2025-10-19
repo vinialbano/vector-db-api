@@ -1,11 +1,11 @@
 import pytest
 
-from vector_db_api.application.libraries import (
+from app.application.libraries import (
     CreateLibraryCommand,
     CreateLibraryHandler,
 )
-from vector_db_api.infrastructure import InMemoryLibraryRepository
-from vector_db_api.domain.libraries import BruteForceIndex
+from app.infrastructure import InMemoryLibraryRepository
+from app.domain.libraries import BruteForceIndex
 
 
 def test_create_library_happy_path():

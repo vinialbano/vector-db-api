@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from vector_db_api.domain.documents import (
+from app.domain.documents import (
     Chunk,
     ChunkId,
     ChunkMetadata,
@@ -11,7 +11,7 @@ from vector_db_api.domain.documents import (
     DocumentMetadata,
     Embedding,
 )
-from vector_db_api.domain.libraries import (
+from app.domain.libraries import (
     BruteForceIndex,
     Library,
     LibraryId,

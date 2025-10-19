@@ -1,8 +1,8 @@
-from vector_db_api.application.documents import (
+from app.application.documents import (
     GetChunkQuery,
     GetChunkHandler,
 )
-from vector_db_api.infrastructure import InMemoryDocumentRepository
+from app.infrastructure import InMemoryDocumentRepository
 
 
 def test_get_chunk_happy_path(document_factory):

@@ -1,9 +1,9 @@
-from vector_db_api.api.documents.v1.update_document import (
+from app.api.documents.v1.update_document import (
     UpdateDocumentRequest,
     update_document,
 )
-from vector_db_api.application.documents import UpdateDocumentHandler
-from vector_db_api.infrastructure import InMemoryDocumentRepository
+from app.application.documents import UpdateDocumentHandler
+from app.infrastructure import InMemoryDocumentRepository
 
 
 def test_update_document_endpoint(document_factory):

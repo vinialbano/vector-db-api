@@ -1,8 +1,8 @@
-from vector_db_api.api.documents.v1.delete_document import (
+from app.api.documents.v1.delete_document import (
     delete_document,
 )
-from vector_db_api.application.documents import DeleteDocumentHandler
-from vector_db_api.infrastructure import InMemoryDocumentRepository
+from app.application.documents import DeleteDocumentHandler
+from app.infrastructure import InMemoryDocumentRepository
 
 
 def test_delete_document_endpoint(document_factory):

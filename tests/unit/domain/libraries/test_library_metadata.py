@@ -1,6 +1,6 @@
 import pytest
 
-from vector_db_api.domain.libraries import LibraryMetadata
+from app.domain.libraries import LibraryMetadata
 
 
 def test_librarymetadata_updated_preserves_created_at():

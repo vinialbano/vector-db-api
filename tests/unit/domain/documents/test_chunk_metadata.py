@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
-from vector_db_api.domain.documents.chunk_metadata import ChunkMetadata
+from app.domain.documents.chunk_metadata import ChunkMetadata
 
 
 def test_chunkmetadata_updated_preserves_created_at():
@@ -30,7 +30,6 @@ def test_chunkmetadata_updated_none_does_not_change():
 
 
 def test_chunkmetadata_matches_filter_basic():
-
     now = datetime.now(timezone.utc)
     m = ChunkMetadata(source="src", page_number=2, created_at=now)
 
@@ -41,7 +40,6 @@ def test_chunkmetadata_matches_filter_basic():
 
 
 def test_chunkmetadata_matches_filter_created_before_after():
-
     now = datetime.now(timezone.utc)
     earlier = now - timedelta(days=1)
     later = now + timedelta(days=1)

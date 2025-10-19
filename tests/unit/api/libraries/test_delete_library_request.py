@@ -1,6 +1,6 @@
-from vector_db_api.api.libraries.v1.delete_library import delete_library
-from vector_db_api.application.libraries import DeleteLibraryHandler
-from vector_db_api.infrastructure import InMemoryLibraryRepository
+from app.api.libraries.v1.delete_library import delete_library
+from app.application.libraries import DeleteLibraryHandler
+from app.infrastructure import InMemoryLibraryRepository
 
 
 def test_delete_library_endpoint(library_factory):

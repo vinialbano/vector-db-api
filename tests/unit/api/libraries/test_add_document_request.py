@@ -1,8 +1,8 @@
-from vector_db_api.api.libraries.v1.add_document import (
+from app.api.libraries.v1.add_document import (
     add_document,
 )
-from vector_db_api.application.libraries import AddDocumentHandler
-from vector_db_api.infrastructure import (
+from app.application.libraries import AddDocumentHandler
+from app.infrastructure import (
     InMemoryDocumentRepository,
     InMemoryLibraryRepository,
 )

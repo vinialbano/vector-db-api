@@ -1,8 +1,8 @@
 import pytest
 
-from vector_db_api.domain.libraries import LibraryIndexerService
-from vector_db_api.infrastructure import InMemoryDocumentRepository
-from vector_db_api.domain.documents import (
+from app.domain.libraries import LibraryIndexerService
+from app.infrastructure import InMemoryDocumentRepository
+from app.domain.documents import (
     Chunk,
     ChunkId,
     ChunkMetadata,

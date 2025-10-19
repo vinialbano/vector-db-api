@@ -1,10 +1,10 @@
 import pytest
 
-from vector_db_api.application.libraries import (
+from app.application.libraries import (
     AddDocumentCommand,
     AddDocumentHandler,
 )
-from vector_db_api.infrastructure import (
+from app.infrastructure import (
     InMemoryDocumentRepository,
     InMemoryLibraryRepository,
 )
