@@ -1,5 +1,5 @@
 from fastapi import Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.api.libraries.router import libraries_router as router
 from app.application.libraries import (
@@ -21,8 +21,7 @@ class DeleteLibraryResponse(BaseModel):
     library_id: str
     deleted: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 @router.delete("/{library_id}", response_model=DeleteLibraryResponse)

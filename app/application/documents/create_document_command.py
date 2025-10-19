@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TypedDict
 
 from app.domain.documents import (
     Chunk,
@@ -15,12 +15,24 @@ from app.domain.documents import (
 
 @dataclass
 class CreateDocumentCommand:
-    title: str
-    # chunks may be omitted when creating an empty document;
-    # chunks can be added later via AddChunk command.
-    chunks: Optional[List[Dict[str, Any]]] = (
-        None  # each chunk: {text: str, embedding: List[float], metadata: Dict[str, Any]}
-    )
+    class DocumentMetadataInput(TypedDict):
+        title: str
+        author: str
+        custom_fields: Dict[str, Any]
+
+    class ChunkInput(TypedDict):
+        text: str
+        embedding: List[float]
+
+        class ChunkMetadataInput(TypedDict):
+            source: str
+            page_number: int
+            custom_fields: Dict[str, Any]
+
+        metadata: ChunkMetadataInput
+
+    metadata: DocumentMetadataInput
+    chunks: Optional[List[ChunkInput]] = None
 
 
 @dataclass
@@ -37,22 +49,31 @@ class CreateDocumentHandler:
         chunks: List[Chunk] = []
         if command.chunks:
             for c in command.chunks:
+                meta = c.get("metadata", {})
                 chunk = Chunk(
                     id=ChunkId.generate(),
                     text=c["text"],
                     embedding=Embedding.from_list(c["embedding"]),
                     metadata=ChunkMetadata(
-                        source=c.get("metadata", {}).get("source", "unknown"),
-                        page_number=c.get("metadata", {}).get("page_number"),
-                        custom_fields=c.get("metadata", {}),
+                        source=meta.get("source", "unknown"),
+                        page_number=meta.get("page_number"),
+                        custom_fields=meta.get("custom_fields", {}),
                     ),
                 )
                 chunks.append(chunk)
 
+        # Extract document metadata required fields and custom fields
+        meta = command.metadata or {}
+        title = meta.get("title")
+        author = meta.get("author")
+        custom_fields = meta.get("custom_fields", {})
+
         document = Document(
             id=DocumentId.generate(),
             chunks=chunks,
-            metadata=DocumentMetadata(title=command.title),
+            metadata=DocumentMetadata(
+                title=title, author=author, custom_fields=custom_fields
+            ),
         )
 
         self._repository.save(document)

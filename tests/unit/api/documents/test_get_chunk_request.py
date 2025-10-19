@@ -13,3 +13,6 @@ def test_get_chunk_presentation(document_factory):
     res = get_chunk(document_id=str(doc.id), chunk_id=str(chunk.id), handler=handler)
     assert res.chunk_id == str(chunk.id)
     assert res.text == chunk.text
+    assert res.embedding == list(chunk.embedding.values)
+    assert res.metadata["source"] == chunk.metadata.source
+    assert res.metadata["page_number"] == chunk.metadata.page_number

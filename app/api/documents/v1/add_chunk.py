@@ -1,7 +1,7 @@
-from typing import Any, Dict, List
+from typing import Dict, List
 
 from fastapi import Depends
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.documents.router import documents_router as router
 from app.application.documents import AddChunkCommand, AddChunkHandler
@@ -17,26 +17,33 @@ def get_add_chunk_handler(
 
 
 class AddChunkRequest(BaseModel):
+    class ChunkMetadataRequest(BaseModel):
+        source: str | None = Field(None, description="Source of the chunk")
+        page_number: int | None = Field(None, description="Optional page number")
+        custom_fields: Dict[str, object] = Field(
+            default_factory=dict, description="Optional custom metadata for the chunk"
+        )
+
     text: str = Field(..., min_length=1)
     embedding: List[float]
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    metadata: ChunkMetadataRequest = Field(default_factory=ChunkMetadataRequest)
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "text": "Chunk text",
                 "embedding": [1.0, 0.0],
                 "metadata": {"source": "upload"},
             }
         }
+    )
 
 
 class AddChunkResponse(BaseModel):
     chunk_id: str
     document_id: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 @router.post("/{document_id}/chunks", response_model=AddChunkResponse)
@@ -50,7 +57,7 @@ def add_chunk(
         document_id=document_id,
         text=request.text,
         embedding=request.embedding,
-        metadata=request.metadata,
+        metadata=request.metadata.model_dump(),
     )
     response = handler.handle(command)
     return AddChunkResponse(

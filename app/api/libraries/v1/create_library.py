@@ -1,5 +1,7 @@
+from typing import Dict
+
 from fastapi import Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.libraries.router import libraries_router as router
 from app.application.libraries import (
@@ -18,15 +20,32 @@ def get_create_library_handler(
 
 
 class CreateLibraryRequest(BaseModel):
-    name: str
-    description: str
+    class LibraryMetadataRequest(BaseModel):
+        name: str | None = Field(None, description="Name of the library")
+        description: str | None = Field(None, description="Description of the library")
+        custom_fields: Dict[str, object] = Field(
+            default_factory=dict, description="Optional custom metadata for the library"
+        )
+
+    metadata: LibraryMetadataRequest = Field(
+        default_factory=LibraryMetadataRequest, description="Optional library metadata"
+    )
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "metadata": {
+                    "name": "My Library",
+                    "description": "A description of my library",
+                    "custom_fields": {"field1": "value1", "field2": "value2"},
+                }
+            }
+        }
+    )
 
 
 class CreateLibraryResponse(BaseModel):
     library_id: str
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 @router.post("/", response_model=CreateLibraryResponse)
@@ -34,6 +53,6 @@ def create_library(
     request: CreateLibraryRequest,
     handler: CreateLibraryHandler = Depends(get_create_library_handler),
 ):
-    command = CreateLibraryCommand(name=request.name, description=request.description)
+    command = CreateLibraryCommand(metadata=request.metadata.model_dump())
     response = handler.handle(command)
     return CreateLibraryResponse(library_id=response.library_id)

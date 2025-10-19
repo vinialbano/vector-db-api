@@ -12,7 +12,8 @@ def test_create_document_happy_path():
     handler = CreateDocumentHandler(repo)
 
     cmd = CreateDocumentCommand(
-        title="T", chunks=[{"text": "hello", "embedding": [1.0, 0.0], "metadata": {}}]
+        metadata={"title": "T"},
+        chunks=[{"text": "hello", "embedding": [1.0, 0.0], "metadata": {}}],
     )
 
     dto = handler.handle(cmd)
@@ -29,7 +30,8 @@ def test_create_document_with_empty_chunk_text_raises():
     handler = CreateDocumentHandler(repo)
 
     cmd = CreateDocumentCommand(
-        title="T", chunks=[{"text": "   ", "embedding": [1.0, 0.0], "metadata": {}}]
+        metadata={"title": "T"},
+        chunks=[{"text": "   ", "embedding": [1.0, 0.0], "metadata": {}}],
     )
 
     with pytest.raises(ValueError):

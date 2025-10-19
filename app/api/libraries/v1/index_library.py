@@ -1,5 +1,5 @@
 from fastapi import Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.api.libraries.router import libraries_router as router
 from app.application.libraries import (
@@ -28,9 +28,7 @@ def get_index_library_handler(
 
 class IndexLibraryResponse(BaseModel):
     library_id: str
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 @router.post("/{library_id}/index", response_model=IndexLibraryResponse)

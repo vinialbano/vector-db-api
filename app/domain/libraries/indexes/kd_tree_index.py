@@ -129,3 +129,17 @@ class KDTreeIndex(VectorIndex):
         """Clear the index"""
         self._root = None
         self._dimension = 0
+
+    def get_chunks(self) -> List[Chunk]:
+        """Return all chunks stored in the KD-tree via DFS traversal."""
+        chunks: List[Chunk] = []
+
+        def dfs(node: Optional[KDNode]) -> None:
+            if node is None:
+                return
+            chunks.append(node.chunk)
+            dfs(node.left)
+            dfs(node.right)
+
+        dfs(self._root)
+        return chunks

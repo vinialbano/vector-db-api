@@ -134,3 +134,19 @@ def test_invalidate_clears_underlying_index(library_factory, document_factory):
     assert not lib.is_indexed
     # concrete index clear() should have emptied stored chunks
     assert getattr(lib.vector_index, "_chunks", None) == []
+
+
+def test_get_indexed_chunks_returns_chunks(chunk_factory, library_factory):
+    # create a library with a brute-force index and index some chunks
+    index = BruteForceIndex()
+    lib = library_factory()
+    lib.vector_index = index
+
+    chunks = [chunk_factory(text=f"Chunk {i}") for i in range(3)]
+    # index via library API
+    lib.index(chunks)
+
+    indexed = lib.get_indexed_chunks()
+    assert isinstance(indexed, list)
+    assert len(indexed) == 3
+    assert indexed[0].text == chunks[0].text

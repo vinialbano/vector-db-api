@@ -1,5 +1,5 @@
 from fastapi import Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.api.documents.router import documents_router as router
 from app.application.documents import (
@@ -20,8 +20,7 @@ def get_delete_document_handler(
 class DeleteDocumentResponse(BaseModel):
     document_id: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 @router.delete("/{document_id}", response_model=DeleteDocumentResponse)

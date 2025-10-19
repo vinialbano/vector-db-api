@@ -1,5 +1,5 @@
 from fastapi import Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.api.documents.router import documents_router as router
 from app.application.documents import (
@@ -21,8 +21,7 @@ class DeleteChunkResponse(BaseModel):
     document_id: str
     chunk_id: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 @router.delete("/{document_id}/chunks/{chunk_id}", response_model=DeleteChunkResponse)

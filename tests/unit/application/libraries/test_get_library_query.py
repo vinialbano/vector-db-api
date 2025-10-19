@@ -1,6 +1,6 @@
 from app.application.libraries import (
-    GetLibraryQuery,
     GetLibraryHandler,
+    GetLibraryQuery,
 )
 from app.infrastructure import InMemoryLibraryRepository
 
@@ -12,8 +12,12 @@ def test_get_library_happy_path(library_factory):
 
     handler = GetLibraryHandler(repo)
     res = handler.handle(GetLibraryQuery(library_id=str(lib.id)))
-    assert res.library is not None
-    assert res.library.id == lib.id
+    assert res is not None
+    assert res.library_id == str(lib.id)
+    assert res.document_ids == [str(d) for d in lib.documents]
+    assert res.metadata["name"] == lib.metadata.name
+    # indexed_chunks may be empty by default
+    assert isinstance(res.indexed_chunks, list)
 
 
 def test_get_library_not_found():

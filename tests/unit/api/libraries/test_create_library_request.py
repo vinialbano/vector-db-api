@@ -10,7 +10,12 @@ def test_create_library_endpoint():
     repo = InMemoryLibraryRepository()
     handler = CreateLibraryHandler(repo, vector_index_factory=lambda: None)
 
-    req = CreateLibraryRequest(name="Lib", description="desc")
+    req = CreateLibraryRequest(
+        metadata={
+            "name": "Lib",
+            "description": "desc",
+        }
+    )
     res = create_library(req, handler=handler)
 
     assert res.library_id is not None

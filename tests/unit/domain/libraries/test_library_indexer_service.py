@@ -1,7 +1,5 @@
 import pytest
 
-from app.domain.libraries import LibraryIndexerService
-from app.infrastructure import InMemoryDocumentRepository
 from app.domain.documents import (
     Chunk,
     ChunkId,
@@ -11,6 +9,8 @@ from app.domain.documents import (
     DocumentMetadata,
     Embedding,
 )
+from app.domain.libraries import LibraryIndexerService
+from app.infrastructure import InMemoryDocumentRepository
 
 
 class FakeLibrary:

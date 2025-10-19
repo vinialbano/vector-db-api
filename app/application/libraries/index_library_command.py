@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.domain.libraries import LibraryId, LibraryRepository, LibraryIndexerService
+from app.domain.libraries import LibraryId, LibraryIndexerService, LibraryRepository
 
 
 @dataclass

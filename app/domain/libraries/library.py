@@ -103,6 +103,10 @@ class Library:
             if chunk.similarity(query_embedding) >= min_similarity
         ]
 
+    def get_indexed_chunks(self) -> List[Chunk]:
+        """Return all chunks currently indexed for this library."""
+        return list(self.vector_index.get_chunks() or [])
+
     @property
     def is_indexed(self) -> bool:
         return self._is_indexed

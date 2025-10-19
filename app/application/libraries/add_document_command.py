@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from app.domain.libraries import LibraryId, LibraryRepository
 from app.domain.documents import DocumentId, DocumentRepository
+from app.domain.libraries import LibraryId, LibraryRepository
 
 
 @dataclass

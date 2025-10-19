@@ -1,7 +1,7 @@
 from typing import Any, Dict, Optional
 
 from fastapi import Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.api.documents.router import documents_router as router
 from app.application.documents import (
@@ -26,9 +26,7 @@ class UpdateDocumentRequest(BaseModel):
 
 class UpdateDocumentResponse(BaseModel):
     document_id: str
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 @router.patch("/{document_id}", response_model=UpdateDocumentResponse)

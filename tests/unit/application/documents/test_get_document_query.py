@@ -1,6 +1,6 @@
 from app.application.documents import (
-    GetDocumentQuery,
     GetDocumentHandler,
+    GetDocumentQuery,
 )
 from app.infrastructure import InMemoryDocumentRepository
 
@@ -12,8 +12,14 @@ def test_get_document_happy_path(document_factory):
 
     handler = GetDocumentHandler(repo)
     res = handler.handle(GetDocumentQuery(document_id=str(doc.id)))
-    assert res.document is not None
-    assert res.document.id == doc.id
+    assert res is not None
+    assert res.document_id == str(doc.id)
+    assert res.chunk_count == doc.chunk_count
+    assert res.metadata["title"] == doc.metadata.title
+    # check chunks serialization
+    assert len(res.chunks) == len(doc.chunks)
+    assert res.chunks[0]["chunk_id"] == str(doc.chunks[0].id)
+    assert res.chunks[0]["text"] == doc.chunks[0].text
 
 
 def test_get_document_not_found():

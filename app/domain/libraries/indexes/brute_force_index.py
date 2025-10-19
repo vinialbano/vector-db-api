@@ -67,3 +67,7 @@ class BruteForceIndex(VectorIndex):
     def clear(self) -> None:
         """Clear the index"""
         self._chunks = []
+
+    def get_chunks(self) -> List[Chunk]:
+        """Return the chunks stored in the index."""
+        return list(self._chunks)

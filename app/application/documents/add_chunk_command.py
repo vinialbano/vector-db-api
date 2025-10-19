@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, TypedDict, NotRequired
+from typing import Any, Dict, List, NotRequired, TypedDict
 
 from app.domain.documents import (
     Chunk,
@@ -13,27 +13,17 @@ from app.domain.documents import (
 
 @dataclass
 class AddChunkCommand:
-    """Add a chunk to an existing document.
+    """Add a chunk to an existing document."""
 
-    The client must provide `document_id` — documents must be created explicitly
-    before chunks are added.
-    """
+    class ChunkMetadataInput(TypedDict):
+        source: NotRequired[str]
+        page_number: NotRequired[int]
+        custom_fields: NotRequired[Dict[str, Any]]
 
     document_id: str
     text: str
     embedding: List[float]
-
-    # Strongly-typed dict shape for chunk metadata received from clients.
-    # Use NotRequired for optional keys so callers don't have to pass every field.
-    class ChunkMetadataDict(TypedDict):
-        source: NotRequired[str]
-        page_number: NotRequired[int]
-        # allow arbitrary extra keys for extensibility
-        # (these will be forwarded into ChunkMetadata.custom_fields)
-        # clients may include any additional fields as needed
-        # Example: {"source": "upload", "page_number": 3, "lang": "en"}
-
-    metadata: ChunkMetadataDict
+    metadata: ChunkMetadataInput
 
 
 @dataclass
@@ -62,7 +52,7 @@ class AddChunkHandler:
             metadata=ChunkMetadata(
                 source=command.metadata.get("source", "unknown"),
                 page_number=command.metadata.get("page_number"),
-                custom_fields=command.metadata,
+                custom_fields=command.metadata.get("custom_fields", {}),
             ),
         )
 

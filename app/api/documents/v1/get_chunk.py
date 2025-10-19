@@ -1,3 +1,5 @@
+from typing import Any, Dict, List
+
 from fastapi import Depends
 from pydantic import BaseModel
 
@@ -16,6 +18,8 @@ def get_get_chunk_handler(
 class GetChunkResponse(BaseModel):
     chunk_id: str
     text: str
+    embedding: List[float]
+    metadata: Dict[str, Any]
 
 
 @router.get(
@@ -30,4 +34,9 @@ def get_chunk(
 ):
     query = GetChunkQuery(document_id=document_id, chunk_id=chunk_id)
     result = handler.handle(query)
-    return GetChunkResponse(chunk_id=str(result.chunk.id), text=result.chunk.text)
+    return GetChunkResponse(
+        chunk_id=result.chunk_id,
+        text=result.text,
+        embedding=result.embedding,
+        metadata=result.metadata,
+    )

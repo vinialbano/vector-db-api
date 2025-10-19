@@ -1,3 +1,5 @@
+from typing import Any, Dict, List
+
 from fastapi import Depends
 from pydantic import BaseModel
 
@@ -16,8 +18,34 @@ def get_get_library_handler(
     return GetLibraryHandler(library_repo)
 
 
+class ChunkMetadataResponse(BaseModel):
+    source: str
+    page_number: int | None
+    created_at: str
+    updated_at: str
+    custom_fields: Dict[str, Any]
+
+
+class ChunkResponse(BaseModel):
+    chunk_id: str
+    text: str
+    embedding: List[float]
+    metadata: ChunkMetadataResponse
+
+
+class LibraryMetadataResponse(BaseModel):
+    name: str
+    description: str
+    created_at: str
+    updated_at: str
+    custom_fields: Dict[str, Any]
+
+
 class LibraryResponse(BaseModel):
     library_id: str
+    document_ids: List[str]
+    metadata: LibraryMetadataResponse
+    indexed_chunks: List[ChunkResponse]
 
 
 @router.get("/{library_id}", response_model=LibraryResponse)
@@ -26,4 +54,9 @@ def get_library(
 ):
     query = GetLibraryQuery(library_id=library_id)
     result = handler.handle(query)
-    return LibraryResponse(library_id=str(result.library.id))
+    return LibraryResponse(
+        library_id=result.library_id,
+        document_ids=result.document_ids,
+        metadata=result.metadata,
+        indexed_chunks=result.indexed_chunks,
+    )

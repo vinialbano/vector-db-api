@@ -2,8 +2,8 @@ from app.api.libraries.v1.update_library import (
     UpdateLibraryRequest,
     update_library,
 )
-from app.infrastructure import InMemoryLibraryRepository
 from app.application.libraries import UpdateLibraryHandler
+from app.infrastructure import InMemoryLibraryRepository
 
 
 def test_update_library_endpoint(library_factory):

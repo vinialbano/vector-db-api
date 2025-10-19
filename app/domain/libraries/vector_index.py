@@ -23,3 +23,8 @@ class VectorIndex(ABC):
     def clear(self) -> None:
         """Clear the index"""
         ...
+
+    @abstractmethod
+    def get_chunks(self) -> List[Chunk]:
+        """Return the chunks currently stored in the index."""
+        ...
