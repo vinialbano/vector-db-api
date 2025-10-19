@@ -2,7 +2,7 @@ from vector_db_api.api.documents.add_chunk import (
     AddChunkRequest,
     add_chunk,
 )
-from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 from vector_db_api.application.documents import AddChunkHandler
 
 

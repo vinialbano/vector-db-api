@@ -3,7 +3,7 @@ from vector_db_api.application.libraries import (
     DeleteLibraryHandler,
 )
 from vector_db_api.domain.libraries import LibraryId
-from vector_db_api.infrastructure.repositories import InMemoryLibraryRepository
+from vector_db_api.infrastructure import InMemoryLibraryRepository
 
 
 def test_delete_library_returns_deleted_true_when_exists(library_factory):

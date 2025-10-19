@@ -1,4 +1,4 @@
-from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 
 
 def test_inmemory_document_repository_crud(document_factory):

@@ -2,7 +2,7 @@ from vector_db_api.domain.documents import DocumentRepository
 from vector_db_api.domain.libraries import (
     LibraryRepository,
 )
-from vector_db_api.infrastructure.repositories import (
+from vector_db_api.infrastructure import (
     InMemoryDocumentRepository,
     InMemoryLibraryRepository,
 )

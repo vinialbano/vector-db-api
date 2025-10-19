@@ -19,7 +19,7 @@ from vector_db_api.domain.libraries import (
     LibraryId,
     LibraryMetadata,
 )
-from vector_db_api.infrastructure.repositories import InMemoryLibraryRepository
+from vector_db_api.infrastructure import InMemoryLibraryRepository
 
 
 class FakeIndexer:

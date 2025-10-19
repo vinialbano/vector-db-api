@@ -2,7 +2,7 @@ from vector_db_api.application.documents import (
     GetChunkQuery,
     GetChunkHandler,
 )
-from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 
 
 def test_get_chunk_happy_path(document_factory):

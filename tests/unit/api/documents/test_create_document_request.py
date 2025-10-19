@@ -2,7 +2,7 @@ from vector_db_api.api.documents.create_document import (
     CreateDocumentRequest,
     create_document,
 )
-from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 from vector_db_api.application.documents import CreateDocumentHandler
 
 

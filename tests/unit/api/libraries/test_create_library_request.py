@@ -2,7 +2,7 @@ from vector_db_api.api.libraries.create_library import (
     CreateLibraryRequest,
     create_library,
 )
-from vector_db_api.infrastructure.repositories import InMemoryLibraryRepository
+from vector_db_api.infrastructure import InMemoryLibraryRepository
 from vector_db_api.application.libraries import CreateLibraryHandler
 
 

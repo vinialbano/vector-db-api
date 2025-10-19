@@ -2,7 +2,7 @@ from vector_db_api.application.libraries import (
     UpdateLibraryCommand,
     UpdateLibraryHandler,
 )
-from vector_db_api.infrastructure.repositories import InMemoryLibraryRepository
+from vector_db_api.infrastructure import InMemoryLibraryRepository
 
 
 def test_update_library_updates_metadata(library_factory):

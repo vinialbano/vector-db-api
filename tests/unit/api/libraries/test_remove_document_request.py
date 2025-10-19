@@ -1,7 +1,7 @@
 from vector_db_api.api.libraries import (
     remove_document,
 )
-from vector_db_api.infrastructure.repositories import (
+from vector_db_api.infrastructure import (
     InMemoryLibraryRepository,
     InMemoryDocumentRepository,
 )

@@ -4,7 +4,7 @@ from vector_db_api.application.libraries import (
     CreateLibraryCommand,
     CreateLibraryHandler,
 )
-from vector_db_api.infrastructure.repositories import InMemoryLibraryRepository
+from vector_db_api.infrastructure import InMemoryLibraryRepository
 from vector_db_api.domain.libraries import BruteForceIndex
 
 

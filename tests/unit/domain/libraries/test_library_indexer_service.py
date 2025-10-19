@@ -1,7 +1,7 @@
 import pytest
 
 from vector_db_api.domain.libraries import LibraryIndexerService
-from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 from vector_db_api.domain.documents import (
     Chunk,
     ChunkId,

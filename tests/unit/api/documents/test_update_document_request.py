@@ -2,7 +2,7 @@ from vector_db_api.api.documents.update_document import (
     UpdateDocumentRequest,
     update_document,
 )
-from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 from vector_db_api.application.documents import UpdateDocumentHandler
 
 

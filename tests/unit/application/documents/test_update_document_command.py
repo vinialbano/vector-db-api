@@ -3,7 +3,7 @@ from vector_db_api.application.documents import (
     UpdateDocumentHandler,
 )
 from vector_db_api.domain.documents import Document, DocumentId, DocumentMetadata
-from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 
 
 def test_update_document_metadata_happy_path():

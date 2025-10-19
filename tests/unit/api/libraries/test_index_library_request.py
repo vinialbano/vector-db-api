@@ -1,7 +1,7 @@
 from vector_db_api.api.libraries.index_library import (
     index_library,
 )
-from vector_db_api.infrastructure.repositories import InMemoryLibraryRepository
+from vector_db_api.infrastructure import InMemoryLibraryRepository
 from vector_db_api.application.libraries import IndexLibraryHandler
 
 

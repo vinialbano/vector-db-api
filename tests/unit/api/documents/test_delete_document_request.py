@@ -1,7 +1,7 @@
 from vector_db_api.api.documents.delete_document import (
     delete_document,
 )
-from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 from vector_db_api.application.documents import DeleteDocumentHandler
 
 

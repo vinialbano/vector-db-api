@@ -4,7 +4,7 @@ from vector_db_api.application.libraries import (
     RemoveDocumentCommand,
     RemoveDocumentHandler,
 )
-from vector_db_api.infrastructure.repositories import (
+from vector_db_api.infrastructure import (
     InMemoryDocumentRepository,
     InMemoryLibraryRepository,
 )

@@ -1,5 +1,4 @@
-
-from vector_db_api.infrastructure.repositories import InMemoryLibraryRepository
+from vector_db_api.infrastructure import InMemoryLibraryRepository
 
 
 def test_inmemory_repository_crud(library_factory):

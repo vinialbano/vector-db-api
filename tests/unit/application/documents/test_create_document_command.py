@@ -4,7 +4,7 @@ from vector_db_api.application.documents import (
     CreateDocumentCommand,
     CreateDocumentHandler,
 )
-from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 
 
 def test_create_document_happy_path():

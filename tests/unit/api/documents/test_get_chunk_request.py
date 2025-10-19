@@ -1,6 +1,6 @@
 from vector_db_api.api.documents import get_chunk
 from vector_db_api.application.documents import GetChunkHandler
-from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 
 
 def test_get_chunk_presentation(document_factory):

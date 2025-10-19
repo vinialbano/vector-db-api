@@ -2,7 +2,7 @@ from vector_db_api.application.libraries import (
     GetLibraryQuery,
     GetLibraryHandler,
 )
-from vector_db_api.infrastructure.repositories import InMemoryLibraryRepository
+from vector_db_api.infrastructure import InMemoryLibraryRepository
 
 
 def test_get_library_happy_path(library_factory):

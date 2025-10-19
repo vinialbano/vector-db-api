@@ -4,7 +4,7 @@ from vector_db_api.application.documents import (
     UpdateChunkCommand,
     UpdateChunkHandler,
 )
-from vector_db_api.infrastructure.repositories import InMemoryDocumentRepository
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 
 
 def test_update_chunk_happy_path(document_factory, chunk_factory):
