@@ -1,11 +1,11 @@
-from vector_db_api.api.libraries.add_document import (
+from vector_db_api.api.libraries.v1.add_document import (
     add_document,
 )
-from vector_db_api.infrastructure import (
-    InMemoryLibraryRepository,
-    InMemoryDocumentRepository,
-)
 from vector_db_api.application.libraries import AddDocumentHandler
+from vector_db_api.infrastructure import (
+    InMemoryDocumentRepository,
+    InMemoryLibraryRepository,
+)
 
 
 def test_add_document_endpoint(library_factory, document_factory):

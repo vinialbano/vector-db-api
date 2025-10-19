@@ -1,7 +1,7 @@
 from fastapi import Depends
 from pydantic import BaseModel
 
-from vector_db_api.api.routers import documents_router as router
+from vector_db_api.api.documents.router import documents_router as router
 from vector_db_api.application.documents import (
     GetDocumentHandler,
     GetDocumentQuery,

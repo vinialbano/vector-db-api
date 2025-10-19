@@ -3,8 +3,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from .document import Document
-from .document_id import DocumentId
+from vector_db_api.domain.documents.document import Document
+from vector_db_api.domain.documents.document_id import DocumentId
 
 
 class DocumentRepository(ABC):

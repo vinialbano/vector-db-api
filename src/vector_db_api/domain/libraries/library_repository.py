@@ -3,8 +3,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from .library import Library
-from .library_id import LibraryId
+from vector_db_api.domain.libraries.library import Library
+from vector_db_api.domain.libraries.library_id import LibraryId
 
 
 class LibraryRepository(ABC):

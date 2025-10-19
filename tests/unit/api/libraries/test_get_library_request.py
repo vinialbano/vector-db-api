@@ -1,4 +1,4 @@
-from vector_db_api.api.libraries.get_library import get_library
+from vector_db_api.api.libraries.v1.get_library import get_library
 from vector_db_api.application.libraries import GetLibraryHandler
 from vector_db_api.infrastructure import InMemoryLibraryRepository
 

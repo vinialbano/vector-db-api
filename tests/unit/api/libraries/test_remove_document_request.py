@@ -1,11 +1,9 @@
-from vector_db_api.api.libraries import (
-    remove_document,
-)
-from vector_db_api.infrastructure import (
-    InMemoryLibraryRepository,
-    InMemoryDocumentRepository,
-)
+from vector_db_api.api.libraries.v1.remove_document import remove_document
 from vector_db_api.application.libraries import RemoveDocumentHandler
+from vector_db_api.infrastructure import (
+    InMemoryDocumentRepository,
+    InMemoryLibraryRepository,
+)
 
 
 def test_remove_document_endpoint(library_factory, document_factory):

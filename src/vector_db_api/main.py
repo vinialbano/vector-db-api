@@ -1,11 +1,8 @@
 from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 
-from vector_db_api.api.documents import *  # noqa: F401, F403
-from vector_db_api.api.libraries import *  # noqa: F401, F403
-from vector_db_api.api.documents import *  # noqa: F401, F403
-from vector_db_api.api.libraries import *  # noqa: F401, F403
-from vector_db_api.api.routers import documents_router, libraries_router
+from vector_db_api.api.documents import documents_router
+from vector_db_api.api.libraries import libraries_router
 
 app = FastAPI(
     title="Vector DB API",

@@ -1,34 +1,34 @@
-from .add_document_command import (
+from vector_db_api.application.libraries.add_document_command import (
     AddDocumentCommand,
     AddDocumentHandler,
     AddDocumentResult,
 )
-from .create_library_command import (
+from vector_db_api.application.libraries.create_library_command import (
     CreateLibraryCommand,
     CreateLibraryHandler,
     CreateLibraryResult,
 )
-from .delete_library_command import (
+from vector_db_api.application.libraries.delete_library_command import (
     DeleteLibraryCommand,
     DeleteLibraryHandler,
     DeleteLibraryResult,
 )
-from .get_library_query import (
+from vector_db_api.application.libraries.get_library_query import (
     GetLibraryHandler,
     GetLibraryQuery,
     GetLibraryResult,
 )
-from .index_library_command import (
+from vector_db_api.application.libraries.index_library_command import (
     IndexLibraryCommand,
     IndexLibraryHandler,
     IndexLibraryResult,
 )
-from .remove_document_command import (
+from vector_db_api.application.libraries.remove_document_command import (
     RemoveDocumentCommand,
     RemoveDocumentHandler,
     RemoveDocumentResult,
 )
-from .update_library_command import (
+from vector_db_api.application.libraries.update_library_command import (
     UpdateLibraryCommand,
     UpdateLibraryHandler,
     UpdateLibraryResult,

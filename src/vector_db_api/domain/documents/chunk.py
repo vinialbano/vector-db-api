@@ -4,10 +4,9 @@ from dataclasses import dataclass
 from typing import Any, Dict
 
 from vector_db_api.domain.common.decorators import refresh_timestamp_after
-
-from .chunk_id import ChunkId
-from .chunk_metadata import ChunkMetadata
-from .embedding import Embedding
+from vector_db_api.domain.documents.chunk_id import ChunkId
+from vector_db_api.domain.documents.chunk_metadata import ChunkMetadata
+from vector_db_api.domain.documents.embedding import Embedding
 
 
 @dataclass

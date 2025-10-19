@@ -1,8 +1,6 @@
-from vector_db_api.api.libraries.index_library import (
-    index_library,
-)
-from vector_db_api.infrastructure import InMemoryLibraryRepository
+from vector_db_api.api.libraries.v1.index_library import index_library
 from vector_db_api.application.libraries import IndexLibraryHandler
+from vector_db_api.infrastructure import InMemoryLibraryRepository
 
 
 def test_index_library_endpoint(library_factory):

@@ -5,10 +5,9 @@ from typing import Any, Callable, List
 
 from vector_db_api.domain.common.decorators import refresh_timestamp_after
 from vector_db_api.domain.documents import Chunk, DocumentId, Embedding
-
-from .library_id import LibraryId
-from .library_metadata import LibraryMetadata
-from .vector_index import VectorIndex
+from vector_db_api.domain.libraries.library_id import LibraryId
+from vector_db_api.domain.libraries.library_metadata import LibraryMetadata
+from vector_db_api.domain.libraries.vector_index import VectorIndex
 
 
 def invalidate_index_after(fn: Callable) -> Callable:

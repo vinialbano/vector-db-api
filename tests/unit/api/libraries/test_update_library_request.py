@@ -1,4 +1,4 @@
-from vector_db_api.api.libraries.update_library import (
+from vector_db_api.api.libraries.v1.update_library import (
     UpdateLibraryRequest,
     update_library,
 )

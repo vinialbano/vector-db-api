@@ -1,11 +1,12 @@
-from .add_chunk import add_chunk
-from .create_document import create_document
-from .delete_chunk import delete_chunk
-from .delete_document import delete_document
-from .get_chunk import get_chunk
-from .get_document import get_document
-from .update_chunk import update_chunk
-from .update_document import update_document
+from vector_db_api.api.documents.router import documents_router
+from vector_db_api.api.documents.v1.add_chunk import add_chunk
+from vector_db_api.api.documents.v1.create_document import create_document
+from vector_db_api.api.documents.v1.delete_chunk import delete_chunk
+from vector_db_api.api.documents.v1.delete_document import delete_document
+from vector_db_api.api.documents.v1.get_chunk import get_chunk
+from vector_db_api.api.documents.v1.get_document import get_document
+from vector_db_api.api.documents.v1.update_chunk import update_chunk
+from vector_db_api.api.documents.v1.update_document import update_document
 
 __all__ = [
     "add_chunk",
@@ -16,4 +17,5 @@ __all__ = [
     "get_document",
     "update_chunk",
     "update_document",
+    "documents_router",
 ]

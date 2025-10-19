@@ -1,27 +1,39 @@
-from .add_chunk_command import AddChunkCommand, AddChunkHandler, AddChunkResult
-from .create_document_command import (
+from vector_db_api.application.documents.add_chunk_command import (
+    AddChunkCommand,
+    AddChunkHandler,
+    AddChunkResult,
+)
+from vector_db_api.application.documents.create_document_command import (
     CreateDocumentCommand,
     CreateDocumentHandler,
     CreateDocumentResult,
 )
-from .delete_chunk_command import (
+from vector_db_api.application.documents.delete_chunk_command import (
     DeleteChunkCommand,
     DeleteChunkHandler,
     DeleteChunkResult,
 )
-from .delete_document_command import (
+from vector_db_api.application.documents.delete_document_command import (
     DeleteDocumentCommand,
     DeleteDocumentHandler,
     DeleteDocumentResult,
 )
-from .get_chunk_query import GetChunkHandler, GetChunkQuery, GetChunkResult
-from .get_document_query import GetDocumentHandler, GetDocumentQuery, GetDocumentResult
-from .update_chunk_command import (
+from vector_db_api.application.documents.get_chunk_query import (
+    GetChunkHandler,
+    GetChunkQuery,
+    GetChunkResult,
+)
+from vector_db_api.application.documents.get_document_query import (
+    GetDocumentHandler,
+    GetDocumentQuery,
+    GetDocumentResult,
+)
+from vector_db_api.application.documents.update_chunk_command import (
     UpdateChunkCommand,
     UpdateChunkHandler,
     UpdateChunkResult,
 )
-from .update_document_command import (
+from vector_db_api.application.documents.update_document_command import (
     UpdateDocumentCommand,
     UpdateDocumentHandler,
     UpdateDocumentResult,

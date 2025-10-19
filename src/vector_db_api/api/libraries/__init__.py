@@ -1,10 +1,11 @@
-from .add_document import add_document
-from .create_library import create_library
-from .delete_library import delete_library
-from .get_library import get_library
-from .index_library import index_library
-from .remove_document import remove_document
-from .update_library import update_library
+from vector_db_api.api.libraries.router import libraries_router
+from vector_db_api.api.libraries.v1.add_document import add_document
+from vector_db_api.api.libraries.v1.create_library import create_library
+from vector_db_api.api.libraries.v1.delete_library import delete_library
+from vector_db_api.api.libraries.v1.get_library import get_library
+from vector_db_api.api.libraries.v1.index_library import index_library
+from vector_db_api.api.libraries.v1.remove_document import remove_document
+from vector_db_api.api.libraries.v1.update_library import update_library
 
 __all__ = [
     "add_document",
@@ -14,4 +15,5 @@ __all__ = [
     "index_library",
     "remove_document",
     "update_library",
+    "libraries_router",
 ]

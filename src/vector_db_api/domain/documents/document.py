@@ -4,11 +4,10 @@ from dataclasses import dataclass
 from typing import List
 
 from vector_db_api.domain.common.decorators import refresh_timestamp_after
-
-from .chunk import Chunk
-from .chunk_id import ChunkId
-from .document_id import DocumentId
-from .document_metadata import DocumentMetadata
+from vector_db_api.domain.documents.chunk import Chunk
+from vector_db_api.domain.documents.chunk_id import ChunkId
+from vector_db_api.domain.documents.document_id import DocumentId
+from vector_db_api.domain.documents.document_metadata import DocumentMetadata
 
 
 @dataclass

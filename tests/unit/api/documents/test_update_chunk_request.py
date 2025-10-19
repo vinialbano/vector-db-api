@@ -1,9 +1,9 @@
-from vector_db_api.api.documents.update_chunk import (
+from vector_db_api.api.documents.v1.update_chunk import (
     UpdateChunkRequest,
     update_chunk,
 )
-from vector_db_api.infrastructure import InMemoryDocumentRepository
 from vector_db_api.application.documents import UpdateChunkHandler
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 
 
 def test_update_chunk_endpoint(document_factory):

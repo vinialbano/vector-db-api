@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 from fastapi import Depends
 from pydantic import BaseModel
 
-from vector_db_api.api.routers import libraries_router as router
+from vector_db_api.api.libraries.router import libraries_router as router
 from vector_db_api.application.libraries import (
     UpdateLibraryCommand,
     UpdateLibraryHandler,

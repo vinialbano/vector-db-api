@@ -1,4 +1,4 @@
-from vector_db_api.api.documents import get_document
+from vector_db_api.api.documents.v1.get_document import get_document
 from vector_db_api.application.documents import GetDocumentHandler
 from vector_db_api.infrastructure import InMemoryDocumentRepository
 

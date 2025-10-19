@@ -1,9 +1,9 @@
-from vector_db_api.api.documents.create_document import (
+from vector_db_api.api.documents.v1.create_document import (
     CreateDocumentRequest,
     create_document,
 )
-from vector_db_api.infrastructure import InMemoryDocumentRepository
 from vector_db_api.application.documents import CreateDocumentHandler
+from vector_db_api.infrastructure import InMemoryDocumentRepository
 
 
 def test_create_document_endpoint(document_factory):
