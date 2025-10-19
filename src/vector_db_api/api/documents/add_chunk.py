@@ -3,9 +3,17 @@ from typing import Any, Dict, List
 from fastapi import Depends
 from pydantic import BaseModel, Field
 
-from vector_db_api.application.documents import AddChunkCommand, AddChunkHandler
 from vector_db_api.api.routers import documents_router as router
-from vector_db_api.container import get_add_chunk_handler
+from vector_db_api.application.documents import AddChunkCommand, AddChunkHandler
+from vector_db_api.container import get_document_repository
+from vector_db_api.domain.documents import DocumentRepository
+
+
+def get_add_chunk_handler(
+    document_repo: DocumentRepository = Depends(get_document_repository),
+) -> AddChunkHandler:
+    """DI provider for AddChunkHandler"""
+    return AddChunkHandler(document_repo)
 
 
 class AddChunkRequest(BaseModel):

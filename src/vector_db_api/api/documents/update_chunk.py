@@ -3,12 +3,20 @@ from typing import Any, Dict, List, Optional
 from fastapi import Depends
 from pydantic import BaseModel
 
+from vector_db_api.api.routers import documents_router as router
 from vector_db_api.application.documents import (
     UpdateChunkCommand,
     UpdateChunkHandler,
 )
-from vector_db_api.api.routers import documents_router as router
-from vector_db_api.container import get_update_chunk_handler
+from vector_db_api.container import get_document_repository
+from vector_db_api.domain.documents.document_repository import DocumentRepository
+
+
+def get_update_chunk_handler(
+    document_repo: DocumentRepository = Depends(get_document_repository),
+) -> UpdateChunkHandler:
+    """DI provider for UpdateChunkHandler"""
+    return UpdateChunkHandler(document_repo)
 
 
 class UpdateChunkRequest(BaseModel):

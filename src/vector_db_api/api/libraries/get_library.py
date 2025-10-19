@@ -3,10 +3,17 @@ from pydantic import BaseModel
 
 from vector_db_api.api.routers import libraries_router as router
 from vector_db_api.application.libraries import (
-    GetLibraryQuery,
     GetLibraryHandler,
+    GetLibraryQuery,
 )
-from vector_db_api.container import get_get_library_handler
+from vector_db_api.container import get_library_repository
+from vector_db_api.domain.libraries.library_repository import LibraryRepository
+
+
+def get_get_library_handler(
+    library_repo: LibraryRepository = Depends(get_library_repository),
+) -> GetLibraryHandler:
+    return GetLibraryHandler(library_repo)
 
 
 class LibraryResponse(BaseModel):

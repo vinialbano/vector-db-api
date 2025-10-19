@@ -1,13 +1,20 @@
 from fastapi import Depends
 from pydantic import BaseModel, Field
 
+from vector_db_api.api.routers import documents_router as router
 from vector_db_api.application.documents import (
     CreateDocumentCommand,
     CreateDocumentHandler,
 )
+from vector_db_api.container import get_document_repository
+from vector_db_api.domain.documents import DocumentRepository
 
-from vector_db_api.container import get_create_document_handler
-from vector_db_api.api.routers import documents_router as router
+
+def get_create_document_handler(
+    document_repo: DocumentRepository = Depends(get_document_repository),  # noqa: F821
+) -> CreateDocumentHandler:
+    """DI provider for CreateDocumentHandler"""
+    return CreateDocumentHandler(document_repo)
 
 
 class CreateDocumentRequest(BaseModel):

@@ -1,12 +1,22 @@
 from fastapi import Depends
 from pydantic import BaseModel
 
+from vector_db_api.api.routers import libraries_router as router
 from vector_db_api.application.libraries import (
     AddDocumentCommand,
     AddDocumentHandler,
 )
-from vector_db_api.api.routers import libraries_router as router
-from vector_db_api.container import get_add_document_handler
+from vector_db_api.container import get_document_repository, get_library_repository
+from vector_db_api.domain.documents import DocumentRepository
+from vector_db_api.domain.libraries import LibraryRepository
+
+
+def get_add_document_handler(
+    library_repo: LibraryRepository = Depends(get_library_repository),
+    document_repo: DocumentRepository = Depends(get_document_repository),
+) -> AddDocumentHandler:
+    """DI provider for AddDocumentHandler"""
+    return AddDocumentHandler(library_repo, document_repo)
 
 
 class AddDocumentResponse(BaseModel):

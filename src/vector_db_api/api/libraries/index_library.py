@@ -1,12 +1,29 @@
 from fastapi import Depends
 from pydantic import BaseModel
 
+from vector_db_api.api.routers import libraries_router as router
 from vector_db_api.application.libraries import (
     IndexLibraryCommand,
     IndexLibraryHandler,
 )
-from vector_db_api.api.routers import libraries_router as router
-from vector_db_api.container import get_index_library_handler
+from vector_db_api.container import get_document_repository, get_library_repository
+from vector_db_api.domain.documents.document_repository import DocumentRepository
+from vector_db_api.domain.libraries import LibraryIndexerService, LibraryRepository
+
+
+def get_library_indexer_service(
+    document_repo: DocumentRepository = Depends(get_document_repository),
+) -> LibraryIndexerService:
+    """DI provider for LibraryIndexerService"""
+    return LibraryIndexerService(document_repo)
+
+
+def get_index_library_handler(
+    library_repo: LibraryRepository = Depends(get_library_repository),
+    indexer_service: LibraryIndexerService = Depends(get_library_indexer_service),
+) -> IndexLibraryHandler:
+    """DI provider for IndexLibraryHandler"""
+    return IndexLibraryHandler(library_repo, indexer_service)
 
 
 class IndexLibraryResponse(BaseModel):

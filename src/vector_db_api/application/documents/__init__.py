@@ -1,19 +1,27 @@
-from .add_chunk import AddChunkCommand, AddChunkHandler, AddChunkResult
-from .create_document import (
+from .add_chunk_command import AddChunkCommand, AddChunkHandler, AddChunkResult
+from .create_document_command import (
     CreateDocumentCommand,
     CreateDocumentHandler,
     CreateDocumentResult,
 )
-from .delete_chunk import DeleteChunkCommand, DeleteChunkHandler, DeleteChunkResult
-from .delete_document import (
+from .delete_chunk_command import (
+    DeleteChunkCommand,
+    DeleteChunkHandler,
+    DeleteChunkResult,
+)
+from .delete_document_command import (
     DeleteDocumentCommand,
     DeleteDocumentHandler,
     DeleteDocumentResult,
 )
-from .get_chunk import GetChunkHandler, GetChunkQuery, GetChunkResult
-from .get_document import GetDocumentHandler, GetDocumentQuery, GetDocumentResult
-from .update_chunk import UpdateChunkCommand, UpdateChunkHandler, UpdateChunkResult
-from .update_document import (
+from .get_chunk_query import GetChunkHandler, GetChunkQuery, GetChunkResult
+from .get_document_query import GetDocumentHandler, GetDocumentQuery, GetDocumentResult
+from .update_chunk_command import (
+    UpdateChunkCommand,
+    UpdateChunkHandler,
+    UpdateChunkResult,
+)
+from .update_document_command import (
     UpdateDocumentCommand,
     UpdateDocumentHandler,
     UpdateDocumentResult,

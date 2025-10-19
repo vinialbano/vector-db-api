@@ -1,9 +1,16 @@
 from fastapi import Depends
 from pydantic import BaseModel
 
-from vector_db_api.application.documents import GetChunkHandler, GetChunkQuery
 from vector_db_api.api.routers import documents_router as router
-from vector_db_api.container import get_get_chunk_handler
+from vector_db_api.application.documents import GetChunkHandler, GetChunkQuery
+from vector_db_api.container import get_document_repository
+from vector_db_api.domain.documents.document_repository import DocumentRepository
+
+
+def get_get_chunk_handler(
+    document_repo: DocumentRepository = Depends(get_document_repository),
+) -> GetChunkHandler:
+    return GetChunkHandler(document_repo)
 
 
 class GetChunkResponse(BaseModel):

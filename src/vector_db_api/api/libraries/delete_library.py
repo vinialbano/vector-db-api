@@ -1,12 +1,20 @@
 from fastapi import Depends
 from pydantic import BaseModel
 
+from vector_db_api.api.routers import libraries_router as router
 from vector_db_api.application.libraries import (
     DeleteLibraryCommand,
     DeleteLibraryHandler,
 )
-from vector_db_api.api.routers import libraries_router as router
-from vector_db_api.container import get_delete_library_handler
+from vector_db_api.container import get_library_repository
+from vector_db_api.domain.libraries import LibraryRepository
+
+
+def get_delete_library_handler(
+    library_repo: LibraryRepository = Depends(get_library_repository),
+) -> DeleteLibraryHandler:
+    """DI provider for DeleteLibraryHandler"""
+    return DeleteLibraryHandler(library_repo)
 
 
 class DeleteLibraryResponse(BaseModel):

@@ -1,12 +1,20 @@
 from fastapi import Depends
 from pydantic import BaseModel
 
+from vector_db_api.api.routers import documents_router as router
 from vector_db_api.application.documents import (
     DeleteChunkCommand,
     DeleteChunkHandler,
 )
-from vector_db_api.api.routers import documents_router as router
-from vector_db_api.container import get_delete_chunk_handler
+from vector_db_api.container import get_document_repository
+from vector_db_api.domain.documents import DocumentRepository
+
+
+def get_delete_chunk_handler(
+    document_repo: DocumentRepository = Depends(get_document_repository),
+) -> DeleteChunkHandler:
+    """DI provider for DeleteChunkHandler"""
+    return DeleteChunkHandler(document_repo)
 
 
 class DeleteChunkResponse(BaseModel):
