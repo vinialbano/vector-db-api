@@ -8,7 +8,7 @@ from app.domain.documents.chunk import Chunk
 from app.domain.documents.chunk_id import ChunkId
 from app.domain.documents.document_id import DocumentId
 from app.domain.documents.document_metadata import DocumentMetadata
-from app.errors import InvalidEntityError
+from app.errors import InvalidEntityError, NotFoundError
 
 
 @dataclass
@@ -46,13 +46,13 @@ class Document:
     ) -> None:
         """Find the chunk by id and delegate update to the Chunk entity.
 
-        Raises InvalidEntityError if chunk not found.
+        Raises NotFoundError if chunk not found.
         """
         for c in self.chunks:
             if c.id == chunk_id:
                 c.update(text=text, embedding=embedding, metadata=metadata)
                 return
-        raise InvalidEntityError(f"Chunk {chunk_id} not found in document {self.id}")
+        raise NotFoundError(f"Chunk {chunk_id} not found in document {self.id}")
 
     def update_metadata(
         self,
@@ -89,4 +89,4 @@ class Document:
         for c in self.chunks:
             if c.id == chunk_id:
                 return c
-        raise InvalidEntityError(f"Chunk {chunk_id} not found in document {self.id}")
+        raise NotFoundError(f"Chunk {chunk_id} not found in document {self.id}")

@@ -55,9 +55,9 @@ class CreateDocumentHandler:
                     text=c["text"],
                     embedding=Embedding.from_list(c["embedding"]),
                     metadata=ChunkMetadata(
-                        source=meta.get("source", "unknown"),
+                        source=meta.get("source") or "unknown",
                         page_number=meta.get("page_number"),
-                        custom_fields=meta.get("custom_fields", {}),
+                        custom_fields=meta.get("custom_fields") or {},
                     ),
                 )
                 chunks.append(chunk)
@@ -66,7 +66,8 @@ class CreateDocumentHandler:
         meta = command.metadata or {}
         title = meta.get("title")
         author = meta.get("author")
-        custom_fields = meta.get("custom_fields", {})
+        # Ensure custom_fields is a dict even if the request provided None
+        custom_fields = meta.get("custom_fields") or {}
 
         document = Document(
             id=DocumentId.generate(),

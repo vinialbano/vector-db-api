@@ -50,9 +50,9 @@ class AddChunkHandler:
             text=command.text,
             embedding=Embedding.from_list(command.embedding),
             metadata=ChunkMetadata(
-                source=command.metadata.get("source", "unknown"),
+                source=command.metadata.get("source") or "unknown",
                 page_number=command.metadata.get("page_number"),
-                custom_fields=command.metadata.get("custom_fields", {}),
+                custom_fields=command.metadata.get("custom_fields") or {},
             ),
         )
 
