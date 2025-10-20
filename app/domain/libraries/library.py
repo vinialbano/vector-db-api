@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, List
+from typing import Any, Callable, List, Tuple
 
 from app.domain.common.decorators import refresh_timestamp_after
 from app.domain.documents import Chunk, DocumentId, Embedding
@@ -90,18 +90,20 @@ class Library:
         query_embedding: Embedding,
         k: int,
         min_similarity: float = 0.0,
-    ) -> List[Chunk]:
+    ) -> List[Tuple[Chunk, float]]:
         """Find the k most similar chunks to the given query embedding"""
         if k <= 0:
             raise ValueError("k must be a positive integer")
         results = self.vector_index.search(query_embedding, k)
 
-        # Filter by minimum similarity threshold if needed
-        return [
-            chunk
-            for chunk in results
-            if chunk.similarity(query_embedding) >= min_similarity
-        ]
+        # Compute similarity and filter
+        scored: List[Tuple[Chunk, float]] = []
+        for chunk in results:
+            score = chunk.similarity(query_embedding)
+            if score >= min_similarity:
+                scored.append((chunk, score))
+
+        return scored
 
     def get_indexed_chunks(self) -> List[Chunk]:
         """Return all chunks currently indexed for this library."""

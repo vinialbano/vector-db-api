@@ -28,6 +28,7 @@ class ChunkMetadataResponse(BaseModel):
 
 class ChunkResponse(BaseModel):
     chunk_id: str
+    similarity: float
     text: str
     embedding: List[float]
     metadata: ChunkMetadataResponse

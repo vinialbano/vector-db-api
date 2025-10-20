@@ -19,6 +19,10 @@ def test_find_similar_chunks_happy_path(library_factory):
     res = handler.handle(q)
     assert res.library_id == str(lib.id)
     assert isinstance(res.chunks, list)
+    assert all(
+        "similarity" in chunk and isinstance(chunk["similarity"], float)
+        for chunk in res.chunks
+    )
 
 
 def test_find_similar_chunks_library_not_found():

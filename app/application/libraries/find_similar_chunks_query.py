@@ -14,10 +14,14 @@ class FindSimilarChunksQuery:
     min_similarity: float = 0.0
 
 
+class SimilarChunkDict(ChunkDict):
+    similarity: float
+
+
 @dataclass
 class FindSimilarChunksResult:
     library_id: str
-    chunks: List[ChunkDict]
+    chunks: List[SimilarChunkDict]
 
 
 @dataclass
@@ -37,8 +41,8 @@ class FindSimilarChunksHandler:
             # If index is not built or another domain error occurs, return empty list
             raw = []
 
-        chunks: List[ChunkDict] = []
-        for c in raw:
-            chunks.append(c.to_dict())
+        chunks: List[SimilarChunkDict] = []
+        for c, score in raw:
+            chunks.append({**c.to_dict(), "similarity": score})
 
         return FindSimilarChunksResult(library_id=str(library.id), chunks=chunks)
