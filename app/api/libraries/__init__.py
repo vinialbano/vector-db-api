@@ -2,6 +2,7 @@ from app.api.libraries.router import libraries_router
 from app.api.libraries.v1.add_document import add_document
 from app.api.libraries.v1.create_library import create_library
 from app.api.libraries.v1.delete_library import delete_library
+from app.api.libraries.v1.find_similar_chunks import find_similar_chunks
 from app.api.libraries.v1.get_library import get_library
 from app.api.libraries.v1.index_library import index_library
 from app.api.libraries.v1.remove_document import remove_document
@@ -11,6 +12,7 @@ __all__ = [
     "add_document",
     "create_library",
     "delete_library",
+    "find_similar_chunks",
     "get_library",
     "index_library",
     "remove_document",

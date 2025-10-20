@@ -1,5 +1,5 @@
 from fastapi import Depends, status
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 from app.api.libraries.router import libraries_router as router
 from app.application.libraries import (

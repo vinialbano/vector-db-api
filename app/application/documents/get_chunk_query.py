@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import List
 
 from app.domain.documents import ChunkId, DocumentId, DocumentRepository
+from app.domain.documents.chunk import ChunkMetadataDict
 
 
 @dataclass
@@ -15,7 +16,7 @@ class GetChunkResult:
     chunk_id: str
     text: str
     embedding: List[float]
-    metadata: Dict[str, Any]
+    metadata: ChunkMetadataDict
 
 
 @dataclass
@@ -29,19 +30,11 @@ class GetChunkHandler:
         if document is None:
             raise ValueError(f"Document {query.document_id} not found")
         chunk = document.get_chunk(chunk_id)
-        # serialize embedding to list of floats
-        embedding_list = list(chunk.embedding.values)
-        # serialize metadata to primitives (isoformat for datetimes)
-        metadata = {
-            "source": chunk.metadata.source,
-            "page_number": chunk.metadata.page_number,
-            "created_at": chunk.metadata.created_at.isoformat(),
-            "updated_at": chunk.metadata.updated_at.isoformat(),
-            "custom_fields": dict(chunk.metadata.custom_fields),
-        }
+        chunk_dict = chunk.to_dict()
+
         return GetChunkResult(
-            chunk_id=str(chunk.id),
-            text=chunk.text,
-            embedding=embedding_list,
-            metadata=metadata,
+            chunk_id=chunk_dict["chunk_id"],
+            text=chunk_dict["text"],
+            embedding=chunk_dict["embedding"],
+            metadata=chunk_dict["metadata"],
         )

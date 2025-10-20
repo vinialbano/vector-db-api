@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List
 
 from app.domain.documents import DocumentId, DocumentRepository
+from app.domain.documents.chunk import ChunkDict
 
 
 @dataclass
@@ -14,7 +15,7 @@ class GetDocumentResult:
     document_id: str
     chunk_count: int
     metadata: Dict[str, Any]
-    chunks: List[Dict[str, Any]]
+    chunks: List[ChunkDict]
 
 
 @dataclass
@@ -37,23 +38,9 @@ class GetDocumentHandler:
         }
 
         # serialize chunks
-        chunks_list: List[Dict[str, Any]] = []
+        chunks_list: List[ChunkDict] = []
         for c in document.chunks:
-            chunk_metadata = {
-                "source": c.metadata.source,
-                "page_number": c.metadata.page_number,
-                "created_at": c.metadata.created_at.isoformat(),
-                "custom_fields": dict(c.metadata.custom_fields),
-                "updated_at": c.metadata.updated_at.isoformat(),
-            }
-            chunks_list.append(
-                {
-                    "chunk_id": str(c.id),
-                    "text": c.text,
-                    "embedding": list(c.embedding.values),
-                    "metadata": chunk_metadata,
-                }
-            )
+            chunks_list.append(c.to_dict())
 
         return GetDocumentResult(
             document_id=str(document.id),

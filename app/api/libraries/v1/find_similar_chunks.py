@@ -1,0 +1,60 @@
+from typing import Any, Dict, List
+
+from fastapi import Depends
+from pydantic import BaseModel
+
+from app.api.libraries.router import libraries_router as router
+from app.application.libraries.find_similar_chunks_query import (
+    FindSimilarChunksHandler,
+    FindSimilarChunksQuery,
+)
+from app.container import get_library_repository
+from app.domain.libraries.library_repository import LibraryRepository
+
+
+def get_find_similar_chunks_handler(
+    library_repo: LibraryRepository = Depends(get_library_repository),
+) -> FindSimilarChunksHandler:
+    return FindSimilarChunksHandler(library_repo)
+
+
+class ChunkMetadataResponse(BaseModel):
+    source: str
+    page_number: int | None
+    created_at: str
+    updated_at: str
+    custom_fields: Dict[str, Any]
+
+
+class ChunkResponse(BaseModel):
+    chunk_id: str
+    text: str
+    embedding: List[float]
+    metadata: ChunkMetadataResponse
+
+
+class FindSimilarRequest(BaseModel):
+    embedding: List[float]
+    k: int = 5
+    min_similarity: float = 0.0
+
+
+class FindSimilarResponse(BaseModel):
+    library_id: str
+    chunks: List[ChunkResponse]
+
+
+@router.post("/{library_id}/find-similar", response_model=FindSimilarResponse)
+def find_similar_chunks(
+    library_id: str,
+    req: FindSimilarRequest,
+    handler: FindSimilarChunksHandler = Depends(get_find_similar_chunks_handler),
+):
+    query = FindSimilarChunksQuery(
+        library_id=library_id,
+        embedding=req.embedding,
+        k=req.k,
+        min_similarity=req.min_similarity,
+    )
+    res = handler.handle(query)
+    return FindSimilarResponse(library_id=res.library_id, chunks=res.chunks)

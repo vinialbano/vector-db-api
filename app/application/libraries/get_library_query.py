@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
+from app.domain.documents.chunk import ChunkDict
 from app.domain.libraries import LibraryId, LibraryRepository
 
 
@@ -14,7 +15,7 @@ class GetLibraryResult:
     library_id: str
     document_ids: List[str]
     metadata: Dict[str, Any]
-    indexed_chunks: List[Dict[str, Any]]
+    indexed_chunks: List[ChunkDict]
 
 
 @dataclass
@@ -41,23 +42,9 @@ class GetLibraryHandler:
 
         # get indexed chunks via the Library public API
         raw_chunks = library.get_indexed_chunks()
-        indexed_chunks: List[Dict[str, Any]] = []
+        indexed_chunks: List[ChunkDict] = []
         for c in raw_chunks:
-            cm = {
-                "source": c.metadata.source,
-                "page_number": c.metadata.page_number,
-                "created_at": c.metadata.created_at.isoformat(),
-                "updated_at": c.metadata.updated_at.isoformat(),
-                "custom_fields": dict(c.metadata.custom_fields),
-            }
-            indexed_chunks.append(
-                {
-                    "chunk_id": str(c.id),
-                    "text": c.text,
-                    "embedding": list(c.embedding.values),
-                    "metadata": cm,
-                }
-            )
+            indexed_chunks.append(c.to_dict())
 
         return GetLibraryResult(
             library_id=str(library.id),

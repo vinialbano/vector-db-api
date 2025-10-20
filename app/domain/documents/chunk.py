@@ -1,12 +1,27 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any, Dict, List, TypedDict
 
 from app.domain.common.decorators import refresh_timestamp_after
 from app.domain.documents.chunk_id import ChunkId
 from app.domain.documents.chunk_metadata import ChunkMetadata
 from app.domain.documents.embedding import Embedding
+
+
+class ChunkMetadataDict(TypedDict):
+    source: str
+    page_number: int
+    created_at: str
+    updated_at: str
+    custom_fields: Dict[str, Any]
+
+
+class ChunkDict(TypedDict):
+    chunk_id: str
+    text: str
+    embedding: List[float]
+    metadata: ChunkMetadataDict
 
 
 @dataclass
@@ -71,3 +86,18 @@ class Chunk:
     def dimension(self) -> int:
         """Return the dimensionality of this chunk's embedding."""
         return self.embedding.dimension
+
+    def to_dict(self) -> ChunkDict:
+        """Serialize chunk to a dictionary with primitive types."""
+        return {
+            "chunk_id": str(self.id),
+            "text": self.text,
+            "embedding": list(self.embedding.values),
+            "metadata": {
+                "source": self.metadata.source,
+                "page_number": self.metadata.page_number,
+                "created_at": self.metadata.created_at.isoformat(),
+                "updated_at": self.metadata.updated_at.isoformat(),
+                "custom_fields": dict(self.metadata.custom_fields),
+            },
+        }
