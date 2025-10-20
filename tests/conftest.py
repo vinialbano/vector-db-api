@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 import pytest
 
+from app.domain.common import Embedding
 from app.domain.documents import (
     Chunk,
     ChunkId,
@@ -9,7 +10,6 @@ from app.domain.documents import (
     Document,
     DocumentId,
     DocumentMetadata,
-    Embedding,
 )
 from app.domain.libraries import (
     BruteForceIndex,

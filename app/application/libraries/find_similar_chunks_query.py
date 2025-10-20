@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import List
 
-from app.domain.documents import Embedding
-from app.domain.documents.chunk import ChunkDict
+from app.domain.common import Embedding
 from app.domain.libraries import LibraryId, LibraryRepository
+from app.domain.libraries.indexed_chunk import IndexedChunkDict
 
 
 @dataclass
@@ -14,7 +14,7 @@ class FindSimilarChunksQuery:
     min_similarity: float = 0.0
 
 
-class SimilarChunkDict(ChunkDict):
+class SimilarChunkDict(IndexedChunkDict):
     similarity: float
 
 

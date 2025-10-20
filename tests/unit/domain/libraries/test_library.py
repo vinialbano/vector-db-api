@@ -1,6 +1,13 @@
 import pytest
 
-from app.domain.libraries import BruteForceIndex, Library, LibraryId, LibraryMetadata
+from app.domain.documents import DocumentId
+from app.domain.libraries import (
+    BruteForceIndex,
+    IndexedChunk,
+    Library,
+    LibraryId,
+    LibraryMetadata,
+)
 
 
 def test_library_creation(library_factory):
@@ -13,7 +20,10 @@ def test_add_document_increments_and_invalidates(library_factory, document_facto
     lib = library_factory(documents=[])
     # build an index using a sample document's chunks to mark library as indexed
     doc = document_factory()
-    lib.index(doc.chunks)
+    # convert document-owned chunks into IndexedChunk with document_id
+
+    indexed = [IndexedChunk.from_chunk(c, doc.id) for c in doc.chunks]
+    lib.index(indexed)
     assert lib.is_indexed
     lib.add_document(doc.id)
 
@@ -33,7 +43,9 @@ def test_remove_document_and_invalidate(library_factory, document_factory):
     doc = document_factory()
     lib = library_factory(documents=[doc])
     # create an index from the document's chunks so the library is indexed
-    lib.index(doc.chunks)
+
+    indexed = [IndexedChunk.from_chunk(c, doc.id) for c in doc.chunks]
+    lib.index(indexed)
     assert lib.is_indexed
 
     lib.remove_document(doc.id)
@@ -105,7 +117,9 @@ def test_index_builds_and_marks_indexed(library_factory, document_factory):
     lib = library_factory(documents=[])
     doc = document_factory()
     assert not lib.is_indexed
-    lib.index(doc.chunks)
+
+    indexed = [IndexedChunk.from_chunk(c, doc.id) for c in doc.chunks]
+    lib.index(indexed)
     assert lib.is_indexed
 
 
@@ -118,7 +132,9 @@ def test_index_raises_on_empty_chunks(library_factory):
 def test_index_raises_when_already_indexed(library_factory, document_factory):
     lib = library_factory(documents=[])
     doc = document_factory()
-    lib.index(doc.chunks)
+
+    indexed = [IndexedChunk.from_chunk(c, doc.id) for c in doc.chunks]
+    lib.index(indexed)
     with pytest.raises(ValueError):
         lib.index(doc.chunks)
 
@@ -127,7 +143,9 @@ def test_invalidate_clears_underlying_index(library_factory, document_factory):
     lib = library_factory(documents=[])
     doc = document_factory()
     # After building index, underlying vector_index should have chunks
-    lib.index(doc.chunks)
+
+    indexed = [IndexedChunk.from_chunk(c, doc.id) for c in doc.chunks]
+    lib.index(indexed)
     # assume the concrete index implementation exposes _chunks for inspection
     assert getattr(lib.vector_index, "_chunks", None) is not None
     lib.invalidate_index()
@@ -143,8 +161,11 @@ def test_get_indexed_chunks_returns_chunks(chunk_factory, library_factory):
     lib.vector_index = index
 
     chunks = [chunk_factory(text=f"Chunk {i}") for i in range(3)]
-    # index via library API
-    lib.index(chunks)
+    # index via library API — construct IndexedChunk with a dummy document id
+
+    dummy_doc_id = DocumentId.generate()
+    indexed = [IndexedChunk.from_chunk(c, dummy_doc_id) for c in chunks]
+    lib.index(indexed)
 
     indexed = lib.get_indexed_chunks()
     assert isinstance(indexed, list)

@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, TypedDict
 
 from app.domain.common.decorators import refresh_timestamp_after
+from app.domain.common.embedding import Embedding
 from app.domain.documents.chunk_id import ChunkId
 from app.domain.documents.chunk_metadata import ChunkMetadata
-from app.domain.documents.embedding import Embedding
 
 
 class ChunkMetadataDict(TypedDict):
@@ -73,19 +73,6 @@ class Chunk:
         This keeps metadata update semantics centralized in the value object.
         """
         self.metadata = self.metadata.updated()
-
-    def similarity(self, embedding: Embedding) -> float:
-        """Compute cosine similarity between this chunk's embedding and another embedding."""
-        return self.embedding.cosine_similarity(embedding)
-
-    def distance(self, embedding: Embedding) -> float:
-        """Compute Euclidean distance between this chunk's embedding and another embedding."""
-        return self.embedding.euclidean_distance(embedding)
-
-    @property
-    def dimension(self) -> int:
-        """Return the dimensionality of this chunk's embedding."""
-        return self.embedding.dimension
 
     def to_dict(self) -> ChunkDict:
         """Serialize chunk to a dictionary with primitive types."""

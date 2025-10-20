@@ -2,7 +2,8 @@ import heapq
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
-from app.domain.documents import Chunk, Embedding
+from app.domain.common import Embedding
+from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.domain.libraries.vector_index import VectorIndex
 
 
@@ -20,9 +21,9 @@ class BruteForceIndex(VectorIndex):
     Use case: Suitable for small datasets or testing purposes.
     """
 
-    _chunks: List[Chunk] = field(init=False, default_factory=list)
+    _chunks: List[IndexedChunk] = field(init=False, default_factory=list)
 
-    def build(self, chunks: List[Chunk]) -> None:
+    def build(self, chunks: List[IndexedChunk]) -> None:
         if not chunks:
             raise ValueError("No chunks provided for indexing")
 
@@ -35,7 +36,7 @@ class BruteForceIndex(VectorIndex):
 
     def search(
         self, query: Embedding, k: int, filters: Dict[str, Any] | None = None
-    ) -> List[Chunk]:
+    ) -> List[IndexedChunk]:
         if not self._chunks:
             raise ValueError("Index is empty. Build the index before searching.")
 
@@ -53,7 +54,7 @@ class BruteForceIndex(VectorIndex):
         # Compute similarity for all chunks.
         # Use an index as a tie-breaker so the heap never needs to
         # compare Chunk instances directly when similarities are equal.
-        similarities: List[tuple[float, int, Chunk]] = []
+        similarities: List[tuple[float, int, IndexedChunk]] = []
         for idx, chunk in enumerate(candidates):
             similarity = chunk.similarity(query)
             # Use negative similarity for min-heap (to get max values).
@@ -68,6 +69,6 @@ class BruteForceIndex(VectorIndex):
         """Clear the index"""
         self._chunks = []
 
-    def get_chunks(self) -> List[Chunk]:
+    def get_chunks(self) -> List[IndexedChunk]:
         """Return the chunks stored in the index."""
         return list(self._chunks)

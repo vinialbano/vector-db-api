@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, TypedDict
 
+from app.domain.common import Embedding
 from app.domain.documents import (
     Chunk,
     ChunkId,
@@ -9,7 +10,6 @@ from app.domain.documents import (
     DocumentId,
     DocumentMetadata,
     DocumentRepository,
-    Embedding,
 )
 
 

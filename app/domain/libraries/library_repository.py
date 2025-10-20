@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List
 
 from app.domain.libraries.library import Library
 from app.domain.libraries.library_id import LibraryId
@@ -16,7 +16,7 @@ class LibraryRepository(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def find_by_id(self, library_id: LibraryId) -> Optional[Library]:
+    def find_by_id(self, library_id: LibraryId) -> Library | None:
         """Find library by ID"""
         raise NotImplementedError()
 

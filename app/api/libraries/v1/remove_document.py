@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from pydantic import BaseModel, ConfigDict
 
 from app.api.libraries.router import libraries_router as router
@@ -9,7 +9,6 @@ from app.application.libraries import (
 from app.container import get_document_repository, get_library_repository
 from app.domain.documents.document_repository import DocumentRepository
 from app.domain.libraries.library_repository import LibraryRepository
-from fastapi import HTTPException, status
 
 
 def get_remove_document_handler(

@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from typing import Any, Dict, List, NotRequired, TypedDict
 
+from app.domain.common import Embedding
 from app.domain.documents import (
     Chunk,
     ChunkId,
     ChunkMetadata,
     DocumentId,
     DocumentRepository,
-    Embedding,
 )
 
 

@@ -1,6 +1,6 @@
 import pytest
 
-from app.domain.documents.embedding import Embedding
+from app.domain.common.embedding import Embedding
 
 
 def test_embedding_creation():

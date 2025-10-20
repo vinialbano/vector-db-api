@@ -1,5 +1,6 @@
 import pytest
 
+from app.domain.common import Embedding
 from app.domain.documents import (
     Chunk,
     ChunkId,
@@ -7,9 +8,9 @@ from app.domain.documents import (
     Document,
     DocumentId,
     DocumentMetadata,
-    Embedding,
 )
 from app.domain.libraries import LibraryIndexerService
+from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.infrastructure import InMemoryDocumentRepository
 
 
@@ -55,7 +56,11 @@ def test_indexer_service_aggregates_chunks_and_calls_library_index():
     service.index(fake_lib)
 
     # aggregated chunks should preserve order: d1.chunks then d2.chunks
-    expected = d1.chunks + d2.chunks
+    # expected indexed chunks (service converts document chunks -> IndexedChunk)
+    expected = [
+        IndexedChunk.from_chunk(c, d1.id if i < len(d1.chunks) else d2.id)
+        for i, c in enumerate(d1.chunks + d2.chunks)
+    ]
     assert fake_lib.index_called_with == expected
 
 

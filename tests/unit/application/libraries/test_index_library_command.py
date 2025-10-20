@@ -4,6 +4,7 @@ from app.application.libraries import (
     IndexLibraryCommand,
     IndexLibraryHandler,
 )
+from app.domain.common import Embedding
 from app.domain.documents import (
     Chunk,
     ChunkId,
@@ -11,7 +12,6 @@ from app.domain.documents import (
     Document,
     DocumentId,
     DocumentMetadata,
-    Embedding,
 )
 from app.domain.libraries import (
     BruteForceIndex,

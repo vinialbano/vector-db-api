@@ -2,7 +2,8 @@ import heapq
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from app.domain.documents import Chunk, Embedding
+from app.domain.common import Embedding
+from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.domain.libraries.vector_index import VectorIndex
 
 
@@ -10,7 +11,7 @@ from app.domain.libraries.vector_index import VectorIndex
 class KDNode:
     """Node in a KD-Tree"""
 
-    chunk: Chunk
+    chunk: IndexedChunk
     left: Optional["KDNode"] = None
     right: Optional["KDNode"] = None
     axis: int = 0  # Axis on which the node splits
@@ -35,7 +36,7 @@ class KDTreeIndex(VectorIndex):
     _root: Optional[KDNode] = None
     _dimension: int = 0
 
-    def build(self, chunks: List[Chunk]) -> None:
+    def build(self, chunks: List[IndexedChunk]) -> None:
         if not chunks:
             raise ValueError("No chunks provided for indexing")
 
@@ -47,7 +48,7 @@ class KDTreeIndex(VectorIndex):
         self._dimension = chunks[0].dimension
         self._root = self._build_tree(chunks, depth=0)
 
-    def _build_tree(self, chunks: List[Chunk], depth: int) -> Optional[KDNode]:
+    def _build_tree(self, chunks: List[IndexedChunk], depth: int) -> Optional[KDNode]:
         if not chunks:
             return None
 
@@ -71,7 +72,7 @@ class KDTreeIndex(VectorIndex):
 
     def search(
         self, query: Embedding, k: int, filters: Dict[str, Any] | None = None
-    ) -> List[Chunk]:
+    ) -> List[IndexedChunk]:
         if not self._root:
             raise ValueError("Index is empty. Build the index before searching.")
 
@@ -79,8 +80,8 @@ class KDTreeIndex(VectorIndex):
             raise ValueError("k must be a positive integer")
         # Use max-heap to track top-k nearest neighbors.
         # Include an index as a tie-breaker so the heap never needs
-        # to compare Chunk objects directly when distances are equal.
-        neighbors: List[tuple[float, int, Chunk]] = []
+        # to compare IndexedChunk objects directly when distances are equal.
+        neighbors: List[tuple[float, int, IndexedChunk]] = []
         _counter = 0
 
         def search_tree(
@@ -130,9 +131,9 @@ class KDTreeIndex(VectorIndex):
         self._root = None
         self._dimension = 0
 
-    def get_chunks(self) -> List[Chunk]:
+    def get_chunks(self) -> List[IndexedChunk]:
         """Return all chunks stored in the KD-tree via DFS traversal."""
-        chunks: List[Chunk] = []
+        chunks: List[IndexedChunk] = []
 
         def dfs(node: Optional[KDNode]) -> None:
             if node is None:

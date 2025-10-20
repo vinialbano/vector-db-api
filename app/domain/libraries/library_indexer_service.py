@@ -1,5 +1,6 @@
 from app.domain.documents import DocumentRepository
 from app.domain.libraries import Library
+from app.domain.libraries.indexed_chunk import IndexedChunk
 
 
 class LibraryIndexerService:
@@ -12,11 +13,12 @@ class LibraryIndexerService:
 
     def index(self, library: Library) -> None:
         """Load the library's documents, and index the collection of all the chunks they contain"""
-        chunks = []
+        indexed_chunks = []
         for document_id in library.documents:
             document = self._document_repository.find_by_id(document_id)
             if not document:
                 raise ValueError(f"Document {document_id} not found")
-            chunks.extend([chunk for chunk in document.chunks])
+            for chunk in document.chunks:
+                indexed_chunks.append(IndexedChunk.from_chunk(chunk, document_id))
 
-        library.index(chunks)
+        library.index(indexed_chunks)

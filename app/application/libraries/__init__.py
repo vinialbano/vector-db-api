@@ -11,15 +11,15 @@ from app.application.libraries.delete_library_command import (
     DeleteLibraryCommand,
     DeleteLibraryHandler,
 )
-from app.application.libraries.get_library_query import (
-    GetLibraryHandler,
-    GetLibraryQuery,
-    GetLibraryResult,
-)
 from app.application.libraries.find_similar_chunks_query import (
     FindSimilarChunksHandler,
     FindSimilarChunksQuery,
     FindSimilarChunksResult,
+)
+from app.application.libraries.get_library_query import (
+    GetLibraryHandler,
+    GetLibraryQuery,
+    GetLibraryResult,
 )
 from app.application.libraries.index_library_command import (
     IndexLibraryCommand,

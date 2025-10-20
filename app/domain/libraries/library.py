@@ -4,7 +4,9 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, List, Tuple
 
 from app.domain.common.decorators import refresh_timestamp_after
-from app.domain.documents import Chunk, DocumentId, Embedding
+from app.domain.common.embedding import Embedding
+from app.domain.documents import DocumentId
+from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.domain.libraries.library_id import LibraryId
 from app.domain.libraries.library_metadata import LibraryMetadata
 from app.domain.libraries.vector_index import VectorIndex
@@ -51,12 +53,13 @@ class Library:
         self.documents = [d for d in self.documents if d != document_id]
 
     @refresh_timestamp_after
-    def index(self, chunks: List[Chunk]) -> None:
-        """Build the vector index from the provided chunks"""
+    def index(self, chunks: List[IndexedChunk]) -> None:
+        """Build the vector index from the provided indexed chunks"""
         if self.is_indexed:
             raise ValueError("Library is already indexed")
         if not chunks:
             raise ValueError("No chunks provided for indexing")
+
         self.vector_index.build(chunks)
         self._is_indexed = True
 
@@ -90,14 +93,14 @@ class Library:
         query_embedding: Embedding,
         k: int,
         min_similarity: float = 0.0,
-    ) -> List[Tuple[Chunk, float]]:
+    ) -> List[Tuple[IndexedChunk, float]]:
         """Find the k most similar chunks to the given query embedding"""
         if k <= 0:
             raise ValueError("k must be a positive integer")
         results = self.vector_index.search(query_embedding, k)
 
         # Compute similarity and filter
-        scored: List[Tuple[Chunk, float]] = []
+        scored: List[Tuple[IndexedChunk, float]] = []
         for chunk in results:
             score = chunk.similarity(query_embedding)
             if score >= min_similarity:
@@ -105,8 +108,8 @@ class Library:
 
         return scored
 
-    def get_indexed_chunks(self) -> List[Chunk]:
-        """Return all chunks currently indexed for this library."""
+    def get_indexed_chunks(self) -> List[IndexedChunk]:
+        """Return all indexed chunks currently indexed for this library."""
         return list(self.vector_index.get_chunks() or [])
 
     @property

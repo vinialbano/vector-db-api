@@ -1,15 +1,18 @@
 import pytest
 
-from app.domain.documents import Chunk, ChunkId, ChunkMetadata, Embedding
+from app.domain.common import Embedding
+from app.domain.documents import ChunkId, ChunkMetadata, DocumentId
 from app.domain.libraries import BruteForceIndex, KDTreeIndex
+from app.domain.libraries.indexed_chunk import IndexedChunk
 
 
 @pytest.fixture
 def sample_chunks():
     """Create sample chunks for testing"""
     return [
-        Chunk(
+        IndexedChunk(
             id=ChunkId.generate(),
+            document_id=DocumentId.generate(),
             text=f"Chunk {i}",
             embedding=Embedding.from_list([float(i), float(i * 2), float(i * 3)]),
             metadata=ChunkMetadata(source=f"source{i}"),
@@ -30,8 +33,8 @@ def test_search(sample_chunks):
 
     assert len(bf_results) == 3
     assert len(kd_results) == 3
-    assert all(isinstance(chunk, Chunk) for chunk in bf_results)
-    assert all(isinstance(chunk, Chunk) for chunk in kd_results)
+    assert all(isinstance(chunk, IndexedChunk) for chunk in bf_results)
+    assert all(isinstance(chunk, IndexedChunk) for chunk in kd_results)
 
 
 def test_index_with_filters(sample_chunks):
