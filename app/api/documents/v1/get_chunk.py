@@ -25,7 +25,6 @@ class GetChunkResponse(BaseModel):
 @router.get(
     "/{document_id}/chunks/{chunk_id}",
     response_model=GetChunkResponse,
-    tags=["documents", "chunks"],
 )
 def get_chunk(
     document_id: str,
