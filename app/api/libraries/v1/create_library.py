@@ -1,4 +1,5 @@
 from typing import Dict
+from uuid import UUID
 
 from fastapi import Depends, status
 from pydantic import BaseModel, ConfigDict, Field
@@ -8,15 +9,18 @@ from app.application.libraries import (
     CreateLibraryCommand,
     CreateLibraryHandler,
 )
-from app.container import get_library_repository
+from app.container import get_document_repository, get_library_repository
+from app.domain.documents import DocumentRepository
 from app.domain.libraries import KDTreeIndex, LibraryRepository
 
 
 def get_create_library_handler(
     library_repo: LibraryRepository = Depends(get_library_repository),
+    document_repo: DocumentRepository = Depends(get_document_repository),
 ) -> CreateLibraryHandler:
     """DI provider for CreateLibraryHandler"""
-    return CreateLibraryHandler(library_repo, lambda: KDTreeIndex())
+
+    return CreateLibraryHandler(library_repo, document_repo, lambda: KDTreeIndex())
 
 
 class CreateLibraryRequest(BaseModel):
@@ -30,14 +34,19 @@ class CreateLibraryRequest(BaseModel):
     metadata: LibraryMetadataRequest = Field(
         default_factory=LibraryMetadataRequest, description="Optional library metadata"
     )
+    documents: list[UUID] = Field(
+        default_factory=list,
+        description="Optional list of document IDs (UUID) to add to the library on creation",
+    )
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
+                "documents": ["550e8400-e29b-41d4-a716-446655440000"],
                 "metadata": {
                     "name": "My Library",
                     "description": "A description of my library",
                     "custom_fields": {"field1": "value1", "field2": "value2"},
-                }
+                },
             }
         }
     )
@@ -55,6 +64,10 @@ def create_library(
     request: CreateLibraryRequest,
     handler: CreateLibraryHandler = Depends(get_create_library_handler),
 ):
-    command = CreateLibraryCommand(metadata=request.metadata.model_dump())
+    # Convert validated UUID objects to strings for the application layer
+    command = CreateLibraryCommand(
+        metadata=request.metadata.model_dump(),
+        documents=[str(d) for d in request.documents],
+    )
     response = handler.handle(command)
     return CreateLibraryResponse(library_id=response.library_id)

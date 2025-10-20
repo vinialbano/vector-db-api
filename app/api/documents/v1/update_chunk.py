@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Optional
 
 from fastapi import Depends, status
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 from app.api.documents.router import documents_router as router
 from app.application.documents import (

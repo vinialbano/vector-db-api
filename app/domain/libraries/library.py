@@ -55,10 +55,10 @@ class Library:
     @refresh_timestamp_after
     def index(self, chunks: List[IndexedChunk]) -> None:
         """Build the vector index from the provided indexed chunks"""
-        if self.is_indexed:
-            raise ValueError("Library is already indexed")
         if not chunks:
             raise ValueError("No chunks provided for indexing")
+        if self.is_indexed:
+            self.vector_index.clear()
 
         self.vector_index.build(chunks)
         self._is_indexed = True

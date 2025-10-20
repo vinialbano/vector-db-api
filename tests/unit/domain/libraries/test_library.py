@@ -129,14 +129,23 @@ def test_index_raises_on_empty_chunks(library_factory):
         lib.index([])
 
 
-def test_index_raises_when_already_indexed(library_factory, document_factory):
+def test_index_clears_when_already_indexed(
+    library_factory, document_factory, chunk_factory
+):
     lib = library_factory(documents=[])
     doc = document_factory()
 
     indexed = [IndexedChunk.from_chunk(c, doc.id) for c in doc.chunks]
+    indexed2 = [
+        IndexedChunk.from_chunk(chunk_factory(text=f"Chunk {i}"), doc.id)
+        for i in range(3)
+    ]
     lib.index(indexed)
-    with pytest.raises(ValueError):
-        lib.index(doc.chunks)
+    lib.index(indexed2)
+    assert lib.is_indexed
+    returned = lib.get_indexed_chunks()
+    assert len(returned) == len(indexed2)
+    assert {c.text for c in returned} == {c.text for c in indexed2}
 
 
 def test_invalidate_clears_underlying_index(library_factory, document_factory):
@@ -154,18 +163,19 @@ def test_invalidate_clears_underlying_index(library_factory, document_factory):
     assert getattr(lib.vector_index, "_chunks", None) == []
 
 
-def test_get_indexed_chunks_returns_chunks(chunk_factory, library_factory):
+def test_get_indexed_chunks_returns_chunks(
+    chunk_factory, library_factory, document_factory
+):
     # create a library with a brute-force index and index some chunks
     index = BruteForceIndex()
     lib = library_factory()
+    doc = document_factory(chunks=[chunk_factory(text=f"Chunk {i}") for i in range(3)])
     lib.vector_index = index
 
-    chunks = [chunk_factory(text=f"Chunk {i}") for i in range(3)]
     # index via library API — construct IndexedChunk with a dummy document id
 
-    dummy_doc_id = DocumentId.generate()
-    indexed = [IndexedChunk.from_chunk(c, dummy_doc_id) for c in chunks]
-    lib.index(indexed)
+    chunks = [IndexedChunk.from_chunk(c, doc.id) for c in doc.chunks]
+    lib.index(chunks)
 
     indexed = lib.get_indexed_chunks()
     assert isinstance(indexed, list)

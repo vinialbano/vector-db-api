@@ -23,8 +23,7 @@ class AddDocumentHandler:
         if library is None:
             raise ValueError(f"Library {command.library_id} not found")
 
-        document = self._document_repo.find_by_id(document_id)
-        if document is None:
+        if not self._document_repo.exists(document_id):
             raise ValueError(f"Document {command.document_id} not found")
 
         library.add_document(document_id)
