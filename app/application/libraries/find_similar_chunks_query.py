@@ -36,13 +36,9 @@ class FindSimilarChunksHandler:
             raise NotFoundError(f"Library {query.library_id} not found")
 
         emb = Embedding.from_list(query.embedding)
-        from app.errors import InvalidEntityError
-
-        try:
-            raw = library.find_similar_chunks(emb, query.k, query.min_similarity)
-        except InvalidEntityError:
-            # If index is not built or another domain validation error occurs, return empty list
-            raw = []
+        # Delegate to domain - let domain validation errors (e.g. index not built)
+        # propagate to the application/API layer so callers receive a clear error.
+        raw = library.find_similar_chunks(emb, query.k, query.min_similarity)
 
         chunks: List[SimilarChunkDict] = []
         for c, score in raw:

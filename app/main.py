@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from app.api.documents import documents_router
 from app.api.libraries import libraries_router
 from app.errors import InvalidEntityError, NotFoundError
+from app.errors import IndexNotBuiltError
 
 app = FastAPI(
     title="Vector DB API",
@@ -38,6 +39,14 @@ def not_found_handler(request, exc: NotFoundError):
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
         content={"error": "Not Found", "details": str(exc)},
+    )
+
+
+@app.exception_handler(IndexNotBuiltError)
+def index_not_built_handler(request, exc: IndexNotBuiltError):
+    return JSONResponse(
+        status_code=status.HTTP_409_CONFLICT,
+        content={"error": "Index not built", "details": str(exc)},
     )
 
 

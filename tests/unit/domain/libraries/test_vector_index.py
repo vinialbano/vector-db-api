@@ -4,7 +4,7 @@ from app.domain.common import Embedding
 from app.domain.documents import ChunkId, ChunkMetadata, DocumentId
 from app.domain.libraries import BruteForceIndex, KDTreeIndex
 from app.domain.libraries.indexed_chunk import IndexedChunk
-from app.errors import InvalidEntityError
+from app.errors import IndexNotBuiltError
 
 
 @pytest.fixture
@@ -61,9 +61,9 @@ def test_search_without_building_raises():
 
     query = Embedding.from_list([1.0, 2.0, 3.0])
 
-    with pytest.raises(InvalidEntityError):
+    with pytest.raises(IndexNotBuiltError):
         bf_index.search(query, k=3)
-    with pytest.raises(InvalidEntityError):
+    with pytest.raises(IndexNotBuiltError):
         kd_index.search(query, k=3)
 
 

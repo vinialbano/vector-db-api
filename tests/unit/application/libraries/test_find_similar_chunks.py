@@ -1,12 +1,17 @@
 from app.application.libraries import FindSimilarChunksHandler, FindSimilarChunksQuery
 from app.errors import InvalidEntityError
 from app.infrastructure import InMemoryLibraryRepository
+from app.domain.libraries.indexed_chunk import IndexedChunk
 
 
-def test_find_similar_chunks_happy_path(library_factory):
+def test_find_similar_chunks_happy_path(library_factory, document_factory):
     repo = InMemoryLibraryRepository()
     lib = library_factory()
     # ensure the library has an index built (factory may or may not)
+    # create a document with chunks and index them into the library
+    doc = document_factory()
+    indexed = [IndexedChunk.from_chunk(c, doc.id) for c in doc.chunks]
+    lib.index(indexed)
     repo.save(lib)
 
     handler = FindSimilarChunksHandler(repo)

@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 from app.domain.common import Embedding
 from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.domain.libraries.vector_index import VectorIndex
-from app.errors import InvalidEntityError
+from app.errors import InvalidEntityError, IndexNotBuiltError
 
 
 @dataclass
@@ -77,7 +77,7 @@ class KDTreeIndex(VectorIndex):
         self, query: Embedding, k: int, filters: Dict[str, Any] | None = None
     ) -> List[IndexedChunk]:
         if not self._root:
-            raise InvalidEntityError(
+            raise IndexNotBuiltError(
                 "Index is empty. Build the index before searching."
             )
 

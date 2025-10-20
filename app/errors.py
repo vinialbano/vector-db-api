@@ -9,6 +9,14 @@ class InvalidEntityError(DomainError):
     """
 
 
+class IndexNotBuiltError(DomainError):
+    """Raised when a vector index has not been built or is empty.
+
+    This represents a conflict in resource state (cannot search until index is
+    built). The API should map this to HTTP 409 Conflict.
+    """
+
+
 class NotFoundError(Exception):
     """Raised when an entity is not found (application-level error).
 
