@@ -3,6 +3,7 @@ from app.application.documents import (
     DeleteDocumentHandler,
 )
 from app.domain.documents import Document, DocumentId, DocumentMetadata
+from app.errors import NotFoundError
 from app.infrastructure import InMemoryDocumentRepository
 
 
@@ -29,6 +30,6 @@ def test_delete_nonexistent_document():
 
     try:
         handler.handle(DeleteDocumentCommand(document_id=fake_id))
-        assert False, "expected ValueError"
-    except ValueError:
+        assert False, "expected NotFoundError"
+    except NotFoundError:
         pass

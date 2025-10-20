@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, TypedDict
 
+from app.domain.documents import DocumentId, DocumentRepository
 from app.domain.libraries import (
     Library,
     LibraryId,
@@ -8,7 +9,7 @@ from app.domain.libraries import (
     LibraryRepository,
     VectorIndex,
 )
-from app.domain.documents import DocumentId, DocumentRepository
+from app.errors import NotFoundError
 
 
 @dataclass
@@ -46,7 +47,7 @@ class CreateLibraryHandler:
             for d in command.documents:
                 document_id = DocumentId.from_string(d)
                 if not self._document_repository.exists(document_id):
-                    raise ValueError(f"Document {document_id} not found")
+                    raise NotFoundError(f"Document {document_id} not found")
                 doc_ids.append(document_id)
 
         vector_index = self.vector_index_factory()

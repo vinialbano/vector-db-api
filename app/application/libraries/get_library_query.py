@@ -3,6 +3,7 @@ from typing import Any, Dict, List
 
 from app.domain.documents.chunk import ChunkDict
 from app.domain.libraries import LibraryId, LibraryRepository
+from app.errors import NotFoundError
 
 
 @dataclass
@@ -26,7 +27,7 @@ class GetLibraryHandler:
         lib_id = LibraryId.from_string(query.library_id)
         library = self._repository.find_by_id(lib_id)
         if library is None:
-            raise ValueError(f"Library {query.library_id} not found")
+            raise NotFoundError(f"Library {query.library_id} not found")
 
         # serialize metadata
         meta = {

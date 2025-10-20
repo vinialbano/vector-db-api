@@ -10,6 +10,7 @@ from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.domain.libraries.library_id import LibraryId
 from app.domain.libraries.library_metadata import LibraryMetadata
 from app.domain.libraries.vector_index import VectorIndex
+from app.errors import InvalidEntityError
 
 
 def invalidate_index_after(fn: Callable) -> Callable:
@@ -38,12 +39,12 @@ class Library:
 
     def __post_init__(self):
         if not self.metadata:
-            raise ValueError("Library metadata cannot be empty")
+            raise InvalidEntityError("Library metadata cannot be empty")
 
     @invalidate_index_after
     def add_document(self, document_id: DocumentId) -> None:
         if any(d == document_id for d in self.documents):
-            raise ValueError(
+            raise InvalidEntityError(
                 f"Document {document_id} already exists in library {self.id}"
             )
         self.documents.append(document_id)
@@ -56,7 +57,7 @@ class Library:
     def index(self, chunks: List[IndexedChunk]) -> None:
         """Build the vector index from the provided indexed chunks"""
         if not chunks:
-            raise ValueError("No chunks provided for indexing")
+            raise InvalidEntityError("No chunks provided for indexing")
         if self.is_indexed:
             self.vector_index.clear()
 
@@ -96,7 +97,7 @@ class Library:
     ) -> List[Tuple[IndexedChunk, float]]:
         """Find the k most similar chunks to the given query embedding"""
         if k <= 0:
-            raise ValueError("k must be a positive integer")
+            raise InvalidEntityError("k must be a positive integer")
         results = self.vector_index.search(query_embedding, k)
 
         # Compute similarity and filter

@@ -1,6 +1,7 @@
 import pytest
 
 from app.application.documents import DeleteChunkCommand, DeleteChunkHandler
+from app.errors import NotFoundError
 from app.infrastructure import InMemoryDocumentRepository
 
 
@@ -48,7 +49,7 @@ def test_delete_chunk_not_found_raises(document_factory, chunk_factory):
 
     handler = DeleteChunkHandler(repo)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(NotFoundError):
         handler.handle(
             DeleteChunkCommand(
                 document_id=str(doc.id), chunk_id="00000000-0000-0000-0000-000000000000"

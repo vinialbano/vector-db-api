@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 
 from app.api.documents import documents_router
 from app.api.libraries import libraries_router
+from app.errors import InvalidEntityError, NotFoundError
 
 app = FastAPI(
     title="Vector DB API",
@@ -22,6 +23,22 @@ def root():
 @app.get("/health", status_code=status.HTTP_200_OK)
 def health_check():
     return {"status": "healthy"}
+
+
+@app.exception_handler(InvalidEntityError)
+def invalid_entity_handler(request, exc: InvalidEntityError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"error": "Invalid entity", "details": str(exc)},
+    )
+
+
+@app.exception_handler(NotFoundError)
+def not_found_handler(request, exc: NotFoundError):
+    return JSONResponse(
+        status_code=status.HTTP_404_NOT_FOUND,
+        content={"error": "Not Found", "details": str(exc)},
+    )
 
 
 @app.exception_handler(Exception)

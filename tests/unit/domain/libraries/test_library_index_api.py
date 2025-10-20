@@ -1,5 +1,3 @@
-from app.domain.libraries.indexes.brute_force_index import BruteForceIndex
-
 # no direct imports required
 
 

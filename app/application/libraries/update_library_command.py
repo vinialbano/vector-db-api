@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 from app.domain.libraries import LibraryId, LibraryRepository
+from app.errors import NotFoundError
 
 
 @dataclass
@@ -20,7 +21,7 @@ class UpdateLibraryHandler:
         lib_id = LibraryId.from_string(command.library_id)
         library = self._repository.find_by_id(lib_id)
         if library is None:
-            raise ValueError(f"Library {command.library_id} not found")
+            raise NotFoundError(f"Library {command.library_id} not found")
 
         library.update_metadata(
             name=command.name,

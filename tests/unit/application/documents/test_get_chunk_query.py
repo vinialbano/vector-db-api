@@ -2,6 +2,7 @@ from app.application.documents import (
     GetChunkHandler,
     GetChunkQuery,
 )
+from app.errors import InvalidEntityError
 from app.infrastructure import InMemoryDocumentRepository
 
 
@@ -31,8 +32,9 @@ def test_get_chunk_not_found(document_factory):
     repo.save(doc)
 
     handler = GetChunkHandler(repo)
+
     try:
         handler.handle(GetChunkQuery(document_id=str(doc.id), chunk_id="non-existent"))
-        assert False, "expected ValueError"
-    except ValueError:
+        assert False, "expected InvalidEntityError"
+    except InvalidEntityError:
         pass

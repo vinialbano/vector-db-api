@@ -1,3 +1,6 @@
+from app.errors import InvalidEntityError
+
+
 def test_document_allows_empty_initial_chunks(document_factory):
     # documents may be created with an empty chunk list and filled later
     doc = document_factory(chunks=[])
@@ -82,6 +85,6 @@ def test_document_get_chunk(document_factory, chunk_factory):
 
     try:
         doc.get_chunk(c2.id)
-        assert False, "expected ValueError"
-    except ValueError:
+        assert False, "expected InvalidEntityError"
+    except InvalidEntityError:
         pass

@@ -19,6 +19,7 @@ from app.domain.libraries import (
     LibraryId,
     LibraryMetadata,
 )
+from app.errors import NotFoundError
 from app.infrastructure import InMemoryLibraryRepository
 
 
@@ -74,5 +75,6 @@ def test_index_library_not_found():
     handler = IndexLibraryHandler(repo, fake_indexer)
 
     cmd = IndexLibraryCommand(library_id=str(LibraryId.generate()))
-    with pytest.raises(ValueError):
+
+    with pytest.raises(NotFoundError):
         handler.handle(cmd)

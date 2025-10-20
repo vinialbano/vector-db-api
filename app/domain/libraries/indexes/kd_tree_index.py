@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Optional
 from app.domain.common import Embedding
 from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.domain.libraries.vector_index import VectorIndex
+from app.errors import InvalidEntityError
 
 
 @dataclass
@@ -38,12 +39,14 @@ class KDTreeIndex(VectorIndex):
 
     def build(self, chunks: List[IndexedChunk]) -> None:
         if not chunks:
-            raise ValueError("No chunks provided for indexing")
+            raise InvalidEntityError("No chunks provided for indexing")
 
         # Validate all embeddings have the same dimension
         dimensions = {chunk.dimension for chunk in chunks}
         if len(dimensions) != 1:
-            raise ValueError("All chunks must have the same embedding dimension")
+            raise InvalidEntityError(
+                "All chunks must have the same embedding dimension"
+            )
 
         self._dimension = chunks[0].dimension
         self._root = self._build_tree(chunks, depth=0)
@@ -74,10 +77,12 @@ class KDTreeIndex(VectorIndex):
         self, query: Embedding, k: int, filters: Dict[str, Any] | None = None
     ) -> List[IndexedChunk]:
         if not self._root:
-            raise ValueError("Index is empty. Build the index before searching.")
+            raise InvalidEntityError(
+                "Index is empty. Build the index before searching."
+            )
 
         if k <= 0:
-            raise ValueError("k must be a positive integer")
+            raise InvalidEntityError("k must be a positive integer")
         # Use max-heap to track top-k nearest neighbors.
         # Include an index as a tie-breaker so the heap never needs
         # to compare IndexedChunk objects directly when distances are equal.

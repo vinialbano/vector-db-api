@@ -4,6 +4,7 @@ from typing import Dict, List, Optional
 
 from app.domain.libraries import Library, LibraryId
 from app.domain.libraries.library_repository import LibraryRepository
+from app.errors import NotFoundError
 
 
 class InMemoryLibraryRepository(LibraryRepository):
@@ -22,7 +23,7 @@ class InMemoryLibraryRepository(LibraryRepository):
     def delete(self, library_id: LibraryId) -> None:
         removed = self._store.pop(str(library_id), None)
         if removed is None:
-            raise ValueError(f"Library {library_id} not found")
+            raise NotFoundError(f"Library {library_id} not found")
 
     def exists(self, library_id: LibraryId) -> bool:
         return str(library_id) in self._store

@@ -4,6 +4,7 @@ from app.application.documents import (
     UpdateChunkCommand,
     UpdateChunkHandler,
 )
+from app.errors import InvalidEntityError
 from app.infrastructure import InMemoryDocumentRepository
 
 
@@ -40,7 +41,7 @@ def test_update_chunk_not_found_raises(document_factory, chunk_factory):
     handler = UpdateChunkHandler(repo)
     fake_chunk_id = "00000000-0000-0000-0000-000000000000"
 
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidEntityError):
         handler.handle(
             UpdateChunkCommand(
                 document_id=str(doc.id), chunk_id=fake_chunk_id, text="no"

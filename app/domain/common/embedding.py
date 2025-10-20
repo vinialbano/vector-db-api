@@ -5,6 +5,8 @@ from typing import List, Tuple
 
 import numpy as np
 
+from app.errors import InvalidEntityError
+
 
 @dataclass(frozen=True)
 class Embedding:
@@ -14,9 +16,9 @@ class Embedding:
 
     def __post_init__(self):
         if len(self.values) == 0:
-            raise ValueError("Embedding cannot be empty")
+            raise InvalidEntityError("Embedding cannot be empty")
         if not all(isinstance(v, (int, float)) for v in self.values):
-            raise ValueError("All embedding values must be numeric")
+            raise InvalidEntityError("All embedding values must be numeric")
 
     @property
     def dimension(self) -> int:
@@ -28,7 +30,7 @@ class Embedding:
 
     def cosine_similarity(self, other: Embedding) -> float:
         if self.dimension != other.dimension:
-            raise ValueError("Embeddings must have same dimension")
+            raise InvalidEntityError("Embeddings must have same dimension")
 
         a = np.asarray(self.values, dtype=float)
         b = np.asarray(other.values, dtype=float)
@@ -43,7 +45,7 @@ class Embedding:
 
     def euclidean_distance(self, other: Embedding) -> float:
         if self.dimension != other.dimension:
-            raise ValueError("Embeddings must have same dimension")
+            raise InvalidEntityError("Embeddings must have same dimension")
 
         a = np.asarray(self.values, dtype=float)
         b = np.asarray(other.values, dtype=float)

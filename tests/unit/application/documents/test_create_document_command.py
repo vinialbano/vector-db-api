@@ -4,6 +4,7 @@ from app.application.documents import (
     CreateDocumentCommand,
     CreateDocumentHandler,
 )
+from app.errors import InvalidEntityError
 from app.infrastructure import InMemoryDocumentRepository
 
 
@@ -34,5 +35,5 @@ def test_create_document_with_empty_chunk_text_raises():
         chunks=[{"text": "   ", "embedding": [1.0, 0.0], "metadata": {}}],
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidEntityError):
         handler.handle(cmd)

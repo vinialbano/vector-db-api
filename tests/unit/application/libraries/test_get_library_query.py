@@ -2,6 +2,7 @@ from app.application.libraries import (
     GetLibraryHandler,
     GetLibraryQuery,
 )
+from app.errors import InvalidEntityError
 from app.infrastructure import InMemoryLibraryRepository
 
 
@@ -25,6 +26,6 @@ def test_get_library_not_found():
     handler = GetLibraryHandler(repo)
     try:
         handler.handle(GetLibraryQuery(library_id="non-existent"))
-        assert False, "expected ValueError"
-    except ValueError:
+        assert False, "expected InvalidEntityError"
+    except InvalidEntityError:
         pass

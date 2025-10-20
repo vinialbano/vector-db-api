@@ -4,6 +4,7 @@ from app.application.libraries import (
     AddDocumentCommand,
     AddDocumentHandler,
 )
+from app.errors import InvalidEntityError
 from app.infrastructure import (
     InMemoryDocumentRepository,
     InMemoryLibraryRepository,
@@ -41,7 +42,8 @@ def test_add_document_missing_library_raises(document_factory):
 
     handler = AddDocumentHandler(lib_repo, doc_repo)
     cmd = AddDocumentCommand(library_id="non-existent", document_id=str(doc.id))
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         handler.handle(cmd)
 
 
@@ -54,12 +56,13 @@ def test_add_document_missing_document_raises(library_factory):
 
     handler = AddDocumentHandler(lib_repo, doc_repo)
     cmd = AddDocumentCommand(library_id=str(lib.id), document_id="non-existent")
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         handler.handle(cmd)
 
 
 def test_add_document_duplicate_raises(library_factory, document_factory):
-    """Adding the same document twice should raise a ValueError from the domain."""
+    """Adding the same document twice should raise a InvalidEntityError from the domain."""
     lib_repo = InMemoryLibraryRepository()
     doc_repo = InMemoryDocumentRepository()
 
@@ -75,5 +78,6 @@ def test_add_document_duplicate_raises(library_factory, document_factory):
     handler.handle(cmd)
 
     # second add should raise (Library.add_document enforces uniqueness)
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         handler.handle(cmd)

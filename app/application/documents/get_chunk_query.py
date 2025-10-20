@@ -3,6 +3,7 @@ from typing import List
 
 from app.domain.documents import ChunkId, DocumentId, DocumentRepository
 from app.domain.documents.chunk import ChunkMetadataDict
+from app.errors import NotFoundError
 
 
 @dataclass
@@ -28,7 +29,7 @@ class GetChunkHandler:
         chunk_id = ChunkId.from_string(query.chunk_id)
         document = self._repository.find_by_id(document_id)
         if document is None:
-            raise ValueError(f"Document {query.document_id} not found")
+            raise NotFoundError(f"Document {query.document_id} not found")
         chunk = document.get_chunk(chunk_id)
         chunk_dict = chunk.to_dict()
 

@@ -1,4 +1,5 @@
 from app.application.libraries import FindSimilarChunksHandler, FindSimilarChunksQuery
+from app.errors import InvalidEntityError
 from app.infrastructure import InMemoryLibraryRepository
 
 
@@ -28,8 +29,9 @@ def test_find_similar_chunks_happy_path(library_factory):
 def test_find_similar_chunks_library_not_found():
     repo = InMemoryLibraryRepository()
     handler = FindSimilarChunksHandler(repo)
+
     try:
         handler.handle(FindSimilarChunksQuery(library_id="nope", embedding=[0.0], k=1))
-        assert False, "expected ValueError"
-    except ValueError:
+        assert False, "expected InvalidEntityError"
+    except InvalidEntityError:
         pass

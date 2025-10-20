@@ -4,6 +4,7 @@ from typing import List
 from app.domain.common import Embedding
 from app.domain.libraries import LibraryId, LibraryRepository
 from app.domain.libraries.indexed_chunk import IndexedChunkDict
+from app.errors import NotFoundError
 
 
 @dataclass
@@ -32,13 +33,15 @@ class FindSimilarChunksHandler:
         lib_id = LibraryId.from_string(query.library_id)
         library = self._repository.find_by_id(lib_id)
         if library is None:
-            raise ValueError(f"Library {query.library_id} not found")
+            raise NotFoundError(f"Library {query.library_id} not found")
 
         emb = Embedding.from_list(query.embedding)
+        from app.errors import InvalidEntityError
+
         try:
             raw = library.find_similar_chunks(emb, query.k, query.min_similarity)
-        except ValueError:
-            # If index is not built or another domain error occurs, return empty list
+        except InvalidEntityError:
+            # If index is not built or another domain validation error occurs, return empty list
             raw = []
 
         chunks: List[SimilarChunkDict] = []

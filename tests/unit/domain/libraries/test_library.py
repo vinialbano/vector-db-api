@@ -1,6 +1,5 @@
 import pytest
 
-from app.domain.documents import DocumentId
 from app.domain.libraries import (
     BruteForceIndex,
     IndexedChunk,
@@ -8,6 +7,7 @@ from app.domain.libraries import (
     LibraryId,
     LibraryMetadata,
 )
+from app.errors import InvalidEntityError
 
 
 def test_library_creation(library_factory):
@@ -35,7 +35,8 @@ def test_add_duplicate_document_raises(library_factory, document_factory):
     lib = library_factory(documents=[])
     doc = document_factory()
     lib.add_document(doc.id)
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         lib.add_document(doc.id)
 
 
@@ -100,14 +101,16 @@ def test_updated_at_changes_on_remove_document(library_factory, document_factory
 
 def test_library_metadata_requires_name():
     # empty name should raise in metadata __post_init__
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         LibraryMetadata(name="", description="desc")
 
 
 def test_library_requires_metadata():
     lid = LibraryId.generate()
     # None metadata should raise in Library.__post_init__
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         # pass a concrete index so constructor requirements are met
         Library(id=lid, documents=[], metadata=None, vector_index=BruteForceIndex())  # type: ignore
 
@@ -125,7 +128,8 @@ def test_index_builds_and_marks_indexed(library_factory, document_factory):
 
 def test_index_raises_on_empty_chunks(library_factory):
     lib = library_factory(documents=[])
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         lib.index([])
 
 

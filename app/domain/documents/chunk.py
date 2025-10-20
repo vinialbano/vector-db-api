@@ -7,6 +7,7 @@ from app.domain.common.decorators import refresh_timestamp_after
 from app.domain.common.embedding import Embedding
 from app.domain.documents.chunk_id import ChunkId
 from app.domain.documents.chunk_metadata import ChunkMetadata
+from app.errors import InvalidEntityError
 
 
 class ChunkMetadataDict(TypedDict):
@@ -35,7 +36,7 @@ class Chunk:
 
     def __post_init__(self):
         if not self.text.strip():
-            raise ValueError("Chunk text cannot be empty")
+            raise InvalidEntityError("Chunk text cannot be empty")
 
     def matches_filter(self, filters: Dict[str, Any]) -> bool:
         """Check if chunk matches metadata filters by delegating to metadata."""
@@ -54,7 +55,7 @@ class Chunk:
         """
         if text is not None:
             if not text.strip():
-                raise ValueError("Chunk text cannot be empty")
+                raise InvalidEntityError("Chunk text cannot be empty")
             self.text = text
 
         if embedding is not None:

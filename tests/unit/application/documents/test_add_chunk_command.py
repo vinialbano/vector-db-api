@@ -4,6 +4,7 @@ from app.application.documents import (
     AddChunkCommand,
     AddChunkHandler,
 )
+from app.errors import InvalidEntityError, NotFoundError
 from app.infrastructure import InMemoryDocumentRepository
 
 
@@ -48,7 +49,7 @@ def test_add_chunk_document_not_found():
         metadata={},
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(NotFoundError):
         handler.handle(cmd)
 
 
@@ -66,5 +67,5 @@ def test_add_chunk_empty_text_raises(document_factory):
         metadata={},
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidEntityError):
         handler.handle(cmd)

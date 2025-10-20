@@ -2,9 +2,11 @@ from datetime import timedelta
 
 import pytest
 
+from app.errors import InvalidEntityError
+
 
 def test_chunk_requires_non_empty_text(chunk_factory):
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidEntityError):
         chunk_factory(text="   ")
 
 
@@ -59,7 +61,8 @@ def test_chunk_metadata_updated_at_changes_on_update(chunk_factory):
 
 def test_chunk_update_invalid_text_raises(chunk_factory):
     c = chunk_factory(text="ok")
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         c.update(text="   ")
 
 

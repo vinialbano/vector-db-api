@@ -4,11 +4,11 @@ from app.application.libraries import (
     CreateLibraryCommand,
     CreateLibraryHandler,
 )
-from app.domain.libraries import BruteForceIndex
-from app.infrastructure import InMemoryLibraryRepository
-from app.infrastructure import InMemoryDocumentRepository
-from app.domain.documents.document_id import DocumentId
 from app.domain.documents import Document, DocumentMetadata
+from app.domain.documents.document_id import DocumentId
+from app.domain.libraries import BruteForceIndex
+from app.errors import InvalidEntityError
+from app.infrastructure import InMemoryDocumentRepository, InMemoryLibraryRepository
 
 
 def test_create_library_happy_path():
@@ -65,5 +65,6 @@ def test_create_library_empty_name_raises():
     )
 
     cmd = CreateLibraryCommand(metadata={"name": "", "description": "desc"})
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         handler.handle(cmd)

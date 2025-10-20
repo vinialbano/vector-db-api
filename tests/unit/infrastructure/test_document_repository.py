@@ -1,3 +1,4 @@
+from app.errors import NotFoundError
 from app.infrastructure import InMemoryDocumentRepository
 
 
@@ -19,9 +20,10 @@ def test_inmemory_document_repository_crud(document_factory):
     repo.delete(doc.id)
     assert not repo.exists(doc.id)
 
-    # deleting again returns False
+    # deleting again should raise NotFoundError
+
     try:
         repo.delete(doc.id)
-        assert False, "expected ValueError"
-    except ValueError:
+        assert False, "expected NotFoundError"
+    except NotFoundError:
         pass

@@ -4,6 +4,7 @@ from typing import Dict
 
 from app.domain.documents import Document, DocumentId
 from app.domain.documents.document_repository import DocumentRepository
+from app.errors import NotFoundError
 
 
 class InMemoryDocumentRepository(DocumentRepository):
@@ -19,7 +20,7 @@ class InMemoryDocumentRepository(DocumentRepository):
     def delete(self, document_id: DocumentId) -> None:
         removed = self._store.pop(str(document_id), None)
         if removed is None:
-            raise ValueError(f"Document {document_id} not found")
+            raise NotFoundError(f"Document {document_id} not found")
 
     def exists(self, document_id: DocumentId) -> bool:
         return str(document_id) in self._store

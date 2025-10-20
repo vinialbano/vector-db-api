@@ -4,6 +4,7 @@ from app.application.libraries import (
     RemoveDocumentCommand,
     RemoveDocumentHandler,
 )
+from app.errors import InvalidEntityError
 from app.infrastructure import (
     InMemoryDocumentRepository,
     InMemoryLibraryRepository,
@@ -63,7 +64,8 @@ def test_remove_document_missing_library_raises(document_factory):
 
     handler = RemoveDocumentHandler(lib_repo, doc_repo)
     cmd = RemoveDocumentCommand(library_id="non-existent", document_id=str(doc.id))
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         handler.handle(cmd)
 
 
@@ -76,5 +78,6 @@ def test_remove_document_missing_document_raises(library_factory):
 
     handler = RemoveDocumentHandler(lib_repo, doc_repo)
     cmd = RemoveDocumentCommand(library_id=str(lib.id), document_id="non-existent")
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         handler.handle(cmd)

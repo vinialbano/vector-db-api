@@ -1,6 +1,7 @@
 import pytest
 
 from app.domain.common.embedding import Embedding
+from app.errors import InvalidEntityError
 
 
 def test_embedding_creation():
@@ -26,5 +27,6 @@ def test_cosine_similarity():
 def test_embedding_different_dimensions_error():
     emb1 = Embedding.from_list([1.0, 2.0])
     emb2 = Embedding.from_list([1.0, 2.0, 3.0])
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         emb1.cosine_similarity(emb2)

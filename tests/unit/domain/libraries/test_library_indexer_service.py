@@ -11,6 +11,7 @@ from app.domain.documents import (
 )
 from app.domain.libraries import LibraryIndexerService
 from app.domain.libraries.indexed_chunk import IndexedChunk
+from app.errors import NotFoundError
 from app.infrastructure import InMemoryDocumentRepository
 
 
@@ -76,7 +77,8 @@ def test_indexer_service_raises_if_document_missing():
     fake_lib = FakeLibrary(documents=[d1.id, missing_id])
 
     service = LibraryIndexerService(repo)
-    with pytest.raises(ValueError) as excinfo:
+
+    with pytest.raises(NotFoundError) as excinfo:
         service.index(fake_lib)
 
     assert str(missing_id) in str(excinfo.value)

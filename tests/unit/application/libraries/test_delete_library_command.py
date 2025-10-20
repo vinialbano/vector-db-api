@@ -3,6 +3,7 @@ from app.application.libraries import (
     DeleteLibraryHandler,
 )
 from app.domain.libraries import LibraryId
+from app.errors import NotFoundError
 from app.infrastructure import InMemoryLibraryRepository
 
 
@@ -27,6 +28,6 @@ def test_delete_library_returns_false_when_missing():
 
     try:
         handler.handle(cmd)
-        assert False, "expected ValueError"
-    except ValueError:
+        assert False, "expected NotFoundError"
+    except NotFoundError:
         pass

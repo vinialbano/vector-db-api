@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from app.domain.documents import ChunkId, DocumentId, DocumentRepository
+from app.errors import NotFoundError
 
 
 @dataclass
@@ -17,11 +18,11 @@ class DeleteChunkHandler:
         document_id = DocumentId.from_string(command.document_id)
         document = self._repository.find_by_id(document_id)
         if document is None:
-            raise ValueError(f"Document {command.document_id} not found")
+            raise NotFoundError(f"Document {command.document_id} not found")
 
         chunk_id = ChunkId.from_string(command.chunk_id)
         if not document.contains_chunk(chunk_id):
-            raise ValueError(
+            raise NotFoundError(
                 f"Chunk {command.chunk_id} not found in document {command.document_id}"
             )
 

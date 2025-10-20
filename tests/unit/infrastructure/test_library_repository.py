@@ -1,3 +1,4 @@
+from app.errors import NotFoundError
 from app.infrastructure import InMemoryLibraryRepository
 
 
@@ -19,9 +20,10 @@ def test_inmemory_repository_crud(library_factory):
     repo.delete(lib.id)
     assert not repo.exists(lib.id)
 
-    # deleting again returns False
+    # deleting again should raise NotFoundError
+
     try:
         repo.delete(lib.id)
-        assert False, "expected ValueError"
-    except ValueError:
+        assert False, "expected NotFoundError"
+    except NotFoundError:
         pass

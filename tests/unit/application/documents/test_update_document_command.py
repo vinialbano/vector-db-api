@@ -1,8 +1,11 @@
+import pytest
+
 from app.application.documents import (
     UpdateDocumentCommand,
     UpdateDocumentHandler,
 )
 from app.domain.documents import Document, DocumentId, DocumentMetadata
+from app.errors import NotFoundError
 from app.infrastructure import InMemoryDocumentRepository
 
 
@@ -34,10 +37,6 @@ def test_update_document_not_found_raises():
     handler = UpdateDocumentHandler(repo)
 
     fake = str(DocumentId.generate())
-    try:
-        handler.handle(UpdateDocumentCommand(document_id=fake, title="x"))
-        raised = False
-    except ValueError:
-        raised = True
 
-    assert raised
+    with pytest.raises(NotFoundError):
+        handler.handle(UpdateDocumentCommand(document_id=fake, title="x"))

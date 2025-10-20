@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Dict
 
+from app.errors import InvalidEntityError
+
 
 @dataclass
 class LibraryMetadata:
@@ -19,7 +21,7 @@ class LibraryMetadata:
 
     def __post_init__(self):
         if not self.name.strip():
-            raise ValueError("Library name cannot be empty")
+            raise InvalidEntityError("Library name cannot be empty")
 
     def updated(
         self,

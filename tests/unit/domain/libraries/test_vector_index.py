@@ -4,6 +4,7 @@ from app.domain.common import Embedding
 from app.domain.documents import ChunkId, ChunkMetadata, DocumentId
 from app.domain.libraries import BruteForceIndex, KDTreeIndex
 from app.domain.libraries.indexed_chunk import IndexedChunk
+from app.errors import InvalidEntityError
 
 
 @pytest.fixture
@@ -59,9 +60,10 @@ def test_search_without_building_raises():
     kd_index = KDTreeIndex()
 
     query = Embedding.from_list([1.0, 2.0, 3.0])
-    with pytest.raises(ValueError):
+
+    with pytest.raises(InvalidEntityError):
         bf_index.search(query, k=3)
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidEntityError):
         kd_index.search(query, k=3)
 
 
@@ -72,9 +74,11 @@ def test_search_with_invalid_k_raises(sample_chunks):
     kd_index.build(sample_chunks)
 
     query = Embedding.from_list([1.0, 2.0, 3.0])
-    with pytest.raises(ValueError):
+    from app.errors import InvalidEntityError
+
+    with pytest.raises(InvalidEntityError):
         bf_index.search(query, k=0)
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidEntityError):
         kd_index.search(query, k=-1)
 
 

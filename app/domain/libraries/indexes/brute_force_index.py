@@ -5,6 +5,7 @@ from typing import Any, Dict, List
 from app.domain.common import Embedding
 from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.domain.libraries.vector_index import VectorIndex
+from app.errors import InvalidEntityError
 
 
 @dataclass
@@ -25,12 +26,14 @@ class BruteForceIndex(VectorIndex):
 
     def build(self, chunks: List[IndexedChunk]) -> None:
         if not chunks:
-            raise ValueError("No chunks provided for indexing")
+            raise InvalidEntityError("No chunks provided for indexing")
 
         # Validate all embeddings have the same dimension
         dimensions = {chunk.dimension for chunk in chunks}
         if len(dimensions) != 1:
-            raise ValueError("All chunks must have the same embedding dimension")
+            raise InvalidEntityError(
+                "All chunks must have the same embedding dimension"
+            )
 
         self._chunks = chunks
 
@@ -38,10 +41,12 @@ class BruteForceIndex(VectorIndex):
         self, query: Embedding, k: int, filters: Dict[str, Any] | None = None
     ) -> List[IndexedChunk]:
         if not self._chunks:
-            raise ValueError("Index is empty. Build the index before searching.")
+            raise InvalidEntityError(
+                "Index is empty. Build the index before searching."
+            )
 
         if k <= 0:
-            raise ValueError("k must be a positive integer")
+            raise InvalidEntityError("k must be a positive integer")
 
         # Apply filters first
         candidates = self._chunks

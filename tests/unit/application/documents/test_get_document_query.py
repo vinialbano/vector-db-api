@@ -2,6 +2,7 @@ from app.application.documents import (
     GetDocumentHandler,
     GetDocumentQuery,
 )
+from app.errors import InvalidEntityError
 from app.infrastructure import InMemoryDocumentRepository
 
 
@@ -25,8 +26,9 @@ def test_get_document_happy_path(document_factory):
 def test_get_document_not_found():
     repo = InMemoryDocumentRepository()
     handler = GetDocumentHandler(repo)
+
     try:
         handler.handle(GetDocumentQuery(document_id="non-existent"))
-        assert False, "expected ValueError"
-    except ValueError:
+        assert False, "expected InvalidEntityError"
+    except InvalidEntityError:
         pass

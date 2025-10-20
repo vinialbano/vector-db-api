@@ -1,6 +1,7 @@
 from app.domain.documents import DocumentRepository
 from app.domain.libraries import Library
 from app.domain.libraries.indexed_chunk import IndexedChunk
+from app.errors import NotFoundError
 
 
 class LibraryIndexerService:
@@ -17,7 +18,7 @@ class LibraryIndexerService:
         for document_id in library.documents:
             document = self._document_repository.find_by_id(document_id)
             if not document:
-                raise ValueError(f"Document {document_id} not found")
+                raise NotFoundError(f"Document {document_id} not found")
             for chunk in document.chunks:
                 indexed_chunks.append(IndexedChunk.from_chunk(chunk, document_id))
 

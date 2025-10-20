@@ -1,6 +1,7 @@
 import pytest
 
 from app.domain.libraries import LibraryMetadata
+from app.errors import InvalidEntityError
 
 
 def test_librarymetadata_updated_preserves_created_at():
@@ -30,5 +31,5 @@ def test_librarymetadata_updated_none_does_not_change():
 
 
 def test_librarymetadata_requires_name():
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidEntityError):
         LibraryMetadata(name="", description="desc")

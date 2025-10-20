@@ -8,6 +8,7 @@ from app.domain.documents.chunk import Chunk
 from app.domain.documents.chunk_id import ChunkId
 from app.domain.documents.document_id import DocumentId
 from app.domain.documents.document_metadata import DocumentMetadata
+from app.errors import InvalidEntityError
 
 
 @dataclass
@@ -27,7 +28,7 @@ class Document:
     @refresh_timestamp_after
     def add_chunk(self, chunk: Chunk) -> None:
         if any(c.id == chunk.id for c in self.chunks):
-            raise ValueError(f"Chunk {chunk.id} already exists in document")
+            raise InvalidEntityError(f"Chunk {chunk.id} already exists in document")
         self.chunks.append(chunk)
 
     @refresh_timestamp_after
@@ -45,13 +46,13 @@ class Document:
     ) -> None:
         """Find the chunk by id and delegate update to the Chunk entity.
 
-        Raises ValueError if chunk not found.
+        Raises InvalidEntityError if chunk not found.
         """
         for c in self.chunks:
             if c.id == chunk_id:
                 c.update(text=text, embedding=embedding, metadata=metadata)
                 return
-        raise ValueError(f"Chunk {chunk_id} not found in document {self.id}")
+        raise InvalidEntityError(f"Chunk {chunk_id} not found in document {self.id}")
 
     def update_metadata(
         self,
@@ -83,9 +84,9 @@ class Document:
     def get_chunk(self, chunk_id: ChunkId) -> Chunk:
         """Return the chunk with the given id.
 
-        Raises ValueError if chunk not found.
+        Raises InvalidEntityError if chunk not found.
         """
         for c in self.chunks:
             if c.id == chunk_id:
                 return c
-        raise ValueError(f"Chunk {chunk_id} not found in document {self.id}")
+        raise InvalidEntityError(f"Chunk {chunk_id} not found in document {self.id}")

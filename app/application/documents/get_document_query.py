@@ -3,6 +3,7 @@ from typing import Any, Dict, List
 
 from app.domain.documents import DocumentId, DocumentRepository
 from app.domain.documents.chunk import ChunkDict
+from app.errors import NotFoundError
 
 
 @dataclass
@@ -26,7 +27,7 @@ class GetDocumentHandler:
         document_id = DocumentId.from_string(query.document_id)
         document = self._repository.find_by_id(document_id)
         if document is None:
-            raise ValueError(f"Document {query.document_id} not found")
+            raise NotFoundError(f"Document {query.document_id} not found")
 
         # serialize document metadata
         metadata = {
