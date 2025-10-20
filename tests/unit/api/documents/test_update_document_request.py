@@ -16,7 +16,7 @@ def test_update_document_endpoint(document_factory):
     req = UpdateDocumentRequest(title="New title")
     res = update_document(document_id=str(doc.id), request=req, handler=handler)
 
-    assert res.document_id == str(doc.id)
+    assert res is None
     updated = repo.find_by_id(doc.id)
     assert updated is not None
     assert updated.metadata.title == "New title"

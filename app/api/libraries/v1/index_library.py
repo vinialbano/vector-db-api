@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, status
 from pydantic import BaseModel, ConfigDict
 
 from app.api.libraries.router import libraries_router as router
@@ -27,15 +27,16 @@ def get_index_library_handler(
 
 
 class IndexLibraryResponse(BaseModel):
-    library_id: str
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.post("/{library_id}/index", response_model=IndexLibraryResponse)
+@router.patch(
+    "/{library_id}/index",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 def index_library(
     library_id: str,
     handler: IndexLibraryHandler = Depends(get_index_library_handler),
 ):
     command = IndexLibraryCommand(library_id=library_id)
-    response = handler.handle(command)
-    return IndexLibraryResponse(library_id=response.library_id)
+    handler.handle(command)

@@ -16,9 +16,12 @@ def test_inmemory_repository_crud(library_factory):
     all_libs = repo.find_all()
     assert lib in all_libs
 
-    deleted = repo.delete(lib.id)
-    assert deleted
+    repo.delete(lib.id)
     assert not repo.exists(lib.id)
 
     # deleting again returns False
-    assert not repo.delete(lib.id)
+    try:
+        repo.delete(lib.id)
+        assert False, "expected ValueError"
+    except ValueError:
+        pass

@@ -9,16 +9,11 @@ class IndexLibraryCommand:
 
 
 @dataclass
-class IndexLibraryResult:
-    library_id: str
-
-
-@dataclass
 class IndexLibraryHandler:
     _repository: LibraryRepository
     _indexer: LibraryIndexerService
 
-    def handle(self, command: IndexLibraryCommand) -> IndexLibraryResult:
+    def handle(self, command: IndexLibraryCommand) -> None:
         lib_id = LibraryId.from_string(command.library_id)
         library = self._repository.find_by_id(lib_id)
         if library is None:
@@ -26,5 +21,3 @@ class IndexLibraryHandler:
 
         self._indexer.index(library)
         self._repository.save(library)
-
-        return IndexLibraryResult(library_id=str(lib_id))

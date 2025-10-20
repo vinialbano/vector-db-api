@@ -16,5 +16,4 @@ def test_add_chunk_endpoint(document_factory):
     req = AddChunkRequest(text="chunk text", embedding=[1.0, 0.0], metadata={})
     res = add_chunk(document_id=str(doc.id), request=req, handler=handler)
 
-    assert res.document_id == str(doc.id)
     assert res.chunk_id is not None

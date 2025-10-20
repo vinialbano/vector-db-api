@@ -21,5 +21,4 @@ def test_add_document_endpoint(library_factory, document_factory):
     handler = AddDocumentHandler(lib_repo, doc_repo)
     res = add_document(library_id=str(lib.id), document_id=str(doc.id), handler=handler)
 
-    assert res.library_id == str(lib.id)
-    assert res.document_id == str(doc.id)
+    assert res is None

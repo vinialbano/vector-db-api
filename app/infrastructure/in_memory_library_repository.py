@@ -19,8 +19,10 @@ class InMemoryLibraryRepository(LibraryRepository):
     def find_all(self) -> List[Library]:
         return list(self._store.values())
 
-    def delete(self, library_id: LibraryId) -> bool:
-        return self._store.pop(str(library_id), None) is not None
+    def delete(self, library_id: LibraryId) -> None:
+        removed = self._store.pop(str(library_id), None)
+        if removed is None:
+            raise ValueError(f"Library {library_id} not found")
 
     def exists(self, library_id: LibraryId) -> bool:
         return str(library_id) in self._store

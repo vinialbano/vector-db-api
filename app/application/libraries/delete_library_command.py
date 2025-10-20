@@ -9,16 +9,9 @@ class DeleteLibraryCommand:
 
 
 @dataclass
-class DeleteLibraryResult:
-    library_id: str
-    deleted: bool
-
-
-@dataclass
 class DeleteLibraryHandler:
     _repository: LibraryRepository
 
-    def handle(self, command: DeleteLibraryCommand) -> DeleteLibraryResult:
+    def handle(self, command: DeleteLibraryCommand) -> None:
         library_id = LibraryId.from_string(command.library_id)
-        deleted = self._repository.delete(library_id)
-        return DeleteLibraryResult(library_id=str(library_id), deleted=deleted)
+        self._repository.delete(library_id)

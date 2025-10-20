@@ -9,19 +9,12 @@ class DeleteDocumentCommand:
 
 
 @dataclass
-class DeleteDocumentResult:
-    document_id: str
-    deleted: bool
-
-
-@dataclass
 class DeleteDocumentHandler:
     _repository: DocumentRepository
 
     def __init__(self, repository: DocumentRepository):
         self._repository = repository
 
-    def handle(self, command: DeleteDocumentCommand) -> DeleteDocumentResult:
+    def handle(self, command: DeleteDocumentCommand) -> None:
         document_id = DocumentId.from_string(command.document_id)
-        deleted = self._repository.delete(document_id)
-        return DeleteDocumentResult(document_id=str(document_id), deleted=deleted)
+        self._repository.delete(document_id)

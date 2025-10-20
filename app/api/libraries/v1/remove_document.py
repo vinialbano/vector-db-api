@@ -9,6 +9,7 @@ from app.application.libraries import (
 from app.container import get_document_repository, get_library_repository
 from app.domain.documents.document_repository import DocumentRepository
 from app.domain.libraries.library_repository import LibraryRepository
+from fastapi import HTTPException, status
 
 
 def get_remove_document_handler(
@@ -20,15 +21,12 @@ def get_remove_document_handler(
 
 
 class RemoveDocumentResponse(BaseModel):
-    library_id: str
-    document_id: str
-    removed: bool
-
     model_config = ConfigDict(from_attributes=True)
 
 
 @router.delete(
-    "/{library_id}/documents/{document_id}", response_model=RemoveDocumentResponse
+    "/{library_id}/documents/{document_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 def remove_document(
     library_id: str,
@@ -37,8 +35,9 @@ def remove_document(
 ):
     command = RemoveDocumentCommand(library_id=library_id, document_id=document_id)
     response = handler.handle(command)
-    return RemoveDocumentResponse(
-        library_id=response.library_id,
-        document_id=response.document_id,
-        removed=response.removed,
-    )
+    if not response.removed:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="document not present in library",
+        )
+    return None

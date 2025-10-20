@@ -22,13 +22,13 @@ class GetDocumentHandler:
     _repository: DocumentRepository
 
     def handle(self, query: GetDocumentQuery) -> GetDocumentResult:
-        doc_id = DocumentId.from_string(query.document_id)
-        document = self._repository.find_by_id(doc_id)
+        document_id = DocumentId.from_string(query.document_id)
+        document = self._repository.find_by_id(document_id)
         if document is None:
             raise ValueError(f"Document {query.document_id} not found")
 
         # serialize document metadata
-        meta = {
+        metadata = {
             "title": document.metadata.title,
             "author": document.metadata.author,
             "created_at": document.metadata.created_at.isoformat(),
@@ -39,7 +39,7 @@ class GetDocumentHandler:
         # serialize chunks
         chunks_list: List[Dict[str, Any]] = []
         for c in document.chunks:
-            chunk_meta = {
+            chunk_metadata = {
                 "source": c.metadata.source,
                 "page_number": c.metadata.page_number,
                 "created_at": c.metadata.created_at.isoformat(),
@@ -51,13 +51,13 @@ class GetDocumentHandler:
                     "chunk_id": str(c.id),
                     "text": c.text,
                     "embedding": list(c.embedding.values),
-                    "metadata": chunk_meta,
+                    "metadata": chunk_metadata,
                 }
             )
 
         return GetDocumentResult(
             document_id=str(document.id),
             chunk_count=document.chunk_count,
-            metadata=meta,
+            metadata=metadata,
             chunks=chunks_list,
         )

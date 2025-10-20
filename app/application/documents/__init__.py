@@ -11,12 +11,10 @@ from app.application.documents.create_document_command import (
 from app.application.documents.delete_chunk_command import (
     DeleteChunkCommand,
     DeleteChunkHandler,
-    DeleteChunkResult,
 )
 from app.application.documents.delete_document_command import (
     DeleteDocumentCommand,
     DeleteDocumentHandler,
-    DeleteDocumentResult,
 )
 from app.application.documents.get_chunk_query import (
     GetChunkHandler,
@@ -31,12 +29,10 @@ from app.application.documents.get_document_query import (
 from app.application.documents.update_chunk_command import (
     UpdateChunkCommand,
     UpdateChunkHandler,
-    UpdateChunkResult,
 )
 from app.application.documents.update_document_command import (
     UpdateDocumentCommand,
     UpdateDocumentHandler,
-    UpdateDocumentResult,
 )
 
 __all__ = [
@@ -48,10 +44,8 @@ __all__ = [
     "CreateDocumentResult",
     "DeleteDocumentCommand",
     "DeleteDocumentHandler",
-    "DeleteDocumentResult",
     "DeleteChunkCommand",
     "DeleteChunkHandler",
-    "DeleteChunkResult",
     "GetChunkHandler",
     "GetChunkQuery",
     "GetChunkResult",
@@ -60,8 +54,6 @@ __all__ = [
     "GetDocumentResult",
     "UpdateChunkCommand",
     "UpdateChunkHandler",
-    "UpdateChunkResult",
     "UpdateDocumentCommand",
     "UpdateDocumentHandler",
-    "UpdateDocumentResult",
 ]

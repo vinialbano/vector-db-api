@@ -1,5 +1,4 @@
-from fastapi import Depends
-from pydantic import BaseModel, ConfigDict
+from fastapi import Depends, status
 
 from app.api.documents.router import documents_router as router
 from app.application.documents import (
@@ -17,14 +16,10 @@ def get_delete_chunk_handler(
     return DeleteChunkHandler(document_repo)
 
 
-class DeleteChunkResponse(BaseModel):
-    document_id: str
-    chunk_id: str
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-@router.delete("/{document_id}/chunks/{chunk_id}", response_model=DeleteChunkResponse)
+@router.delete(
+    "/{document_id}/chunks/{chunk_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 def delete_chunk(
     document_id: str,
     chunk_id: str,
@@ -32,7 +27,4 @@ def delete_chunk(
 ):
     """Delete a chunk from a document."""
     command = DeleteChunkCommand(document_id=document_id, chunk_id=chunk_id)
-    response = handler.handle(command)
-    return DeleteChunkResponse(
-        document_id=response.document_id, chunk_id=response.chunk_id
-    )
+    handler.handle(command)

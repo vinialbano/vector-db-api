@@ -16,8 +16,10 @@ class InMemoryDocumentRepository(DocumentRepository):
     def find_by_id(self, document_id: DocumentId) -> Document | None:
         return self._store.get(str(document_id))
 
-    def delete(self, document_id: DocumentId) -> bool:
-        return self._store.pop(str(document_id), None) is not None
+    def delete(self, document_id: DocumentId) -> None:
+        removed = self._store.pop(str(document_id), None)
+        if removed is None:
+            raise ValueError(f"Document {document_id} not found")
 
     def exists(self, document_id: DocumentId) -> bool:
         return str(document_id) in self._store

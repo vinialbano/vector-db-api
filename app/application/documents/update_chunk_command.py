@@ -14,16 +14,10 @@ class UpdateChunkCommand:
 
 
 @dataclass
-class UpdateChunkResult:
-    document_id: str
-    chunk_id: str
-
-
-@dataclass
 class UpdateChunkHandler:
     _repository: DocumentRepository
 
-    def handle(self, command: UpdateChunkCommand) -> UpdateChunkResult:
+    def handle(self, command: UpdateChunkCommand) -> None:
         document_id = DocumentId.from_string(command.document_id)
         document = self._repository.find_by_id(document_id)
         if document is None:
@@ -41,4 +35,3 @@ class UpdateChunkHandler:
 
         # persist
         self._repository.save(document)
-        return UpdateChunkResult(document_id=str(document_id), chunk_id=str(chunk_id))

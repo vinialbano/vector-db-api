@@ -19,7 +19,7 @@ class DocumentRepository(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def delete(self, document_id: DocumentId) -> bool:
+    def delete(self, document_id: DocumentId) -> None:
         raise NotImplementedError()
 
     @abstractmethod

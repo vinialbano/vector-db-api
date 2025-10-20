@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from fastapi import Depends
+from fastapi import Depends, status
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.documents.router import documents_router as router
@@ -41,12 +41,14 @@ class AddChunkRequest(BaseModel):
 
 class AddChunkResponse(BaseModel):
     chunk_id: str
-    document_id: str
-
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.post("/{document_id}/chunks", response_model=AddChunkResponse)
+@router.post(
+    "/{document_id}/chunks",
+    status_code=status.HTTP_201_CREATED,
+    response_model=AddChunkResponse,
+)
 def add_chunk(
     document_id: str,
     request: AddChunkRequest,
@@ -60,6 +62,4 @@ def add_chunk(
         metadata=request.metadata.model_dump(),
     )
     response = handler.handle(command)
-    return AddChunkResponse(
-        chunk_id=response.chunk_id, document_id=response.document_id
-    )
+    return AddChunkResponse.model_validate(response)

@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from fastapi import Depends
+from fastapi import Depends, status
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.documents.router import documents_router as router
@@ -53,11 +53,34 @@ class CreateDocumentRequest(BaseModel):
 
     model_config = ConfigDict(
         json_schema_extra={
-            "example": {
-                "title": "My Document Title",
-                "author": "Jane Doe",
-                "custom_fields": {"category": "reports", "source": "scanner"},
-            }
+            "examples": [
+                {
+                    "metadata": {
+                        "title": "My Document Title",
+                        "author": "Jane Doe",
+                        "custom_fields": {"category": "reports", "source": "scanner"},
+                    },
+                    "chunks": [
+                        {
+                            "text": "First chunk text",
+                            "embedding": [0.1, 0.2, 0.3],
+                            "metadata": {"source": "upload", "page_number": 1},
+                        },
+                        {
+                            "text": "Second chunk text",
+                            "embedding": [0.4, 0.5, 0.6],
+                            "metadata": {"source": "upload", "page_number": 2},
+                        },
+                    ],
+                },
+                {
+                    "metadata": {
+                        "title": "My Document Title",
+                        "author": "Jane Doe",
+                        "custom_fields": {"category": "reports", "source": "scanner"},
+                    },
+                },
+            ]
         }
     )
 
@@ -77,6 +100,7 @@ class CreateDocumentResponse(BaseModel):
 
 @router.post(
     "/",
+    status_code=status.HTTP_201_CREATED,
     response_model=CreateDocumentResponse,
 )
 def create_document(
@@ -89,6 +113,4 @@ def create_document(
         chunks=[c.model_dump() for c in request.chunks] if request.chunks else None,
     )
     result = handler.handle(command)
-    return CreateDocumentResponse(
-        document_id=result.document_id,
-    )
+    return CreateDocumentResponse.model_validate(result)

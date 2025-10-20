@@ -12,8 +12,6 @@ class RemoveDocumentCommand:
 
 @dataclass
 class RemoveDocumentResult:
-    library_id: str
-    document_id: str
     removed: bool
 
 
@@ -39,11 +37,9 @@ class RemoveDocumentHandler:
         # Remove document reference from library (idempotent by library implementation)
         # Track whether it was removed by checking contains before/after
         was_present = library.contains_document(document_id)
+        if not was_present:
+            return RemoveDocumentResult(removed=False)
         library.remove_document(document_id)
         self._library_repo.save(library)
 
-        return RemoveDocumentResult(
-            library_id=str(library_id),
-            document_id=str(document_id),
-            removed=was_present,
-        )
+        return RemoveDocumentResult(removed=True)

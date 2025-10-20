@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional
 
-from fastapi import Depends
+from fastapi import Depends, status
 from pydantic import BaseModel, ConfigDict
 
 from app.api.libraries.router import libraries_router as router
@@ -26,11 +26,10 @@ class UpdateLibraryRequest(BaseModel):
 
 
 class UpdateLibraryResponse(BaseModel):
-    library_id: str
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.patch("/{library_id}", response_model=UpdateLibraryResponse)
+@router.patch("/{library_id}", status_code=status.HTTP_204_NO_CONTENT)
 def update_library(
     library_id: str,
     request: UpdateLibraryRequest,
@@ -42,5 +41,5 @@ def update_library(
         description=request.description,
         custom_fields=request.custom_fields,
     )
-    response = handler.handle(command)
-    return UpdateLibraryResponse(library_id=response.library_id)
+    handler.handle(command)
+    return None

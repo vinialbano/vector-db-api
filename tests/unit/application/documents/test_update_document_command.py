@@ -20,8 +20,8 @@ def test_update_document_metadata_happy_path():
         document_id=str(doc.id), title="New Title", author="Author"
     )
 
-    dto = handler.handle(cmd)
-    assert dto.document_id == str(doc.id)
+    result = handler.handle(cmd)
+    assert result is None
 
     updated = repo.find_by_id(doc.id)
     assert updated is not None

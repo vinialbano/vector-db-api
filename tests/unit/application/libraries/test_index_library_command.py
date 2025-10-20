@@ -62,9 +62,9 @@ def test_handler_calls_indexer_and_returns_library_id():
     handler = IndexLibraryHandler(repo, fake_indexer)
 
     cmd = IndexLibraryCommand(library_id=str(lib.id))
-    res = handler.handle(cmd)
+    result = handler.handle(cmd)
 
-    assert res.library_id == str(lib.id)
+    assert result is None
     assert fake_indexer.called_with is lib
 
 

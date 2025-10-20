@@ -11,17 +11,11 @@ class AddDocumentCommand:
 
 
 @dataclass
-class AddDocumentResult:
-    library_id: str
-    document_id: str
-
-
-@dataclass
 class AddDocumentHandler:
     _library_repo: LibraryRepository
     _document_repo: DocumentRepository
 
-    def handle(self, command: AddDocumentCommand) -> AddDocumentResult:
+    def handle(self, command: AddDocumentCommand) -> None:
         library_id = LibraryId.from_string(command.library_id)
         document_id = DocumentId.from_string(command.document_id)
 
@@ -35,7 +29,3 @@ class AddDocumentHandler:
 
         library.add_document(document_id)
         self._library_repo.save(library)
-
-        return AddDocumentResult(
-            library_id=str(library_id), document_id=str(document_id)
-        )

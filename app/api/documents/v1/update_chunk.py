@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional
 
-from fastapi import Depends
+from fastapi import Depends, status
 from pydantic import BaseModel, ConfigDict
 
 from app.api.documents.router import documents_router as router
@@ -25,13 +25,10 @@ class UpdateChunkRequest(BaseModel):
     metadata: Optional[Dict[str, Any]] = None
 
 
-class UpdateChunkResponse(BaseModel):
-    document_id: str
-    chunk_id: str
-    model_config = ConfigDict(from_attributes=True)
-
-
-@router.patch("/{document_id}/chunks/{chunk_id}", response_model=UpdateChunkResponse)
+@router.patch(
+    "/{document_id}/chunks/{chunk_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 def update_chunk(
     document_id: str,
     chunk_id: str,
@@ -46,7 +43,4 @@ def update_chunk(
         embedding=request.embedding,
         metadata=request.metadata,
     )
-    response = handler.handle(command)
-    return UpdateChunkResponse(
-        document_id=response.document_id, chunk_id=response.chunk_id
-    )
+    handler.handle(command)

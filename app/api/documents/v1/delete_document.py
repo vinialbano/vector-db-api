@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, status
 from pydantic import BaseModel, ConfigDict
 
 from app.api.documents.router import documents_router as router
@@ -18,17 +18,14 @@ def get_delete_document_handler(
 
 
 class DeleteDocumentResponse(BaseModel):
-    document_id: str
-
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.delete("/{document_id}", response_model=DeleteDocumentResponse)
+@router.delete("/{document_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_document(
     document_id: str,
     handler: DeleteDocumentHandler = Depends(get_delete_document_handler),
 ):
     """Delete a document."""
     command = DeleteDocumentCommand(document_id=document_id)
-    response = handler.handle(command)
-    return DeleteDocumentResponse(document_id=response.document_id)
+    handler.handle(command)

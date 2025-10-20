@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional
 
-from fastapi import Depends
+from fastapi import Depends, status
 from pydantic import BaseModel, ConfigDict
 
 from app.api.documents.router import documents_router as router
@@ -25,11 +25,13 @@ class UpdateDocumentRequest(BaseModel):
 
 
 class UpdateDocumentResponse(BaseModel):
-    document_id: str
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.patch("/{document_id}", response_model=UpdateDocumentResponse)
+@router.patch(
+    "/{document_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 def update_document(
     document_id: str,
     request: UpdateDocumentRequest,
@@ -41,5 +43,4 @@ def update_document(
         title=request.title,
         custom_fields=request.metadata,
     )
-    response = handler.handle(command)
-    return UpdateDocumentResponse(document_id=response.document_id)
+    handler.handle(command)

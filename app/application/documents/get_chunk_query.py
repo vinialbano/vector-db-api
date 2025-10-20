@@ -23,16 +23,16 @@ class GetChunkHandler:
     _repository: DocumentRepository
 
     def handle(self, query: GetChunkQuery) -> GetChunkResult:
-        doc_id = DocumentId.from_string(query.document_id)
+        document_id = DocumentId.from_string(query.document_id)
         chunk_id = ChunkId.from_string(query.chunk_id)
-        document = self._repository.find_by_id(doc_id)
+        document = self._repository.find_by_id(document_id)
         if document is None:
             raise ValueError(f"Document {query.document_id} not found")
         chunk = document.get_chunk(chunk_id)
         # serialize embedding to list of floats
         embedding_list = list(chunk.embedding.values)
         # serialize metadata to primitives (isoformat for datetimes)
-        meta = {
+        metadata = {
             "source": chunk.metadata.source,
             "page_number": chunk.metadata.page_number,
             "created_at": chunk.metadata.created_at.isoformat(),
@@ -43,5 +43,5 @@ class GetChunkHandler:
             chunk_id=str(chunk.id),
             text=chunk.text,
             embedding=embedding_list,
-            metadata=meta,
+            metadata=metadata,
         )

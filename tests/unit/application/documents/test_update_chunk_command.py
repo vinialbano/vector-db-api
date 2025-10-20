@@ -22,9 +22,8 @@ def test_update_chunk_happy_path(document_factory, chunk_factory):
         metadata={"source": "updated"},
     )
 
-    dto = handler.handle(cmd)
-    assert dto.document_id == str(doc.id)
-    assert dto.chunk_id == str(ch.id)
+    result = handler.handle(cmd)
+    assert result is None
 
     updated = repo.find_by_id(doc.id)
     assert updated is not None

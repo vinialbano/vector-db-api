@@ -1,6 +1,6 @@
 from typing import Dict
 
-from fastapi import Depends
+from fastapi import Depends, status
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.libraries.router import libraries_router as router
@@ -48,7 +48,9 @@ class CreateLibraryResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.post("/", response_model=CreateLibraryResponse)
+@router.post(
+    "/", status_code=status.HTTP_201_CREATED, response_model=CreateLibraryResponse
+)
 def create_library(
     request: CreateLibraryRequest,
     handler: CreateLibraryHandler = Depends(get_create_library_handler),

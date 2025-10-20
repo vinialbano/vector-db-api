@@ -21,4 +21,4 @@ def test_index_library_endpoint(library_factory):
     repo.save(lib)
 
     res = index_library(library_id=str(lib.id), handler=handler)
-    assert res.library_id == str(lib.id)
+    assert res is None

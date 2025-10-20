@@ -29,7 +29,6 @@ def test_add_chunk_happy_path(document_factory):
     assert saved is not None
     assert saved.chunk_count == 2  # document_factory creates 1 chunk by default
     # returned dto references should match
-    assert result.document_id == str(doc.id)
     assert isinstance(result.chunk_id, str)
 
     # verify chunk content and metadata defaults

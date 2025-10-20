@@ -11,6 +11,5 @@ def test_delete_library_endpoint(library_factory):
     repo.save(lib)
 
     res = delete_library(library_id=str(lib.id), handler=handler)
-    assert res.library_id == str(lib.id)
-    assert res.deleted is True
+    assert res is None
     assert not repo.exists(lib.id)

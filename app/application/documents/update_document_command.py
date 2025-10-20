@@ -13,17 +13,12 @@ class UpdateDocumentCommand:
 
 
 @dataclass
-class UpdateDocumentResult:
-    document_id: str
-
-
-@dataclass
 class UpdateDocumentHandler:
     _repository: DocumentRepository
 
-    def handle(self, command: UpdateDocumentCommand) -> UpdateDocumentResult:
-        doc_id = DocumentId.from_string(command.document_id)
-        document = self._repository.find_by_id(doc_id)
+    def handle(self, command: UpdateDocumentCommand) -> None:
+        document_id = DocumentId.from_string(command.document_id)
+        document = self._repository.find_by_id(document_id)
         if document is None:
             raise ValueError(f"Document {command.document_id} not found")
 
@@ -33,5 +28,3 @@ class UpdateDocumentHandler:
             custom_fields=command.custom_fields,
         )
         self._repository.save(document)
-
-        return UpdateDocumentResult(document_id=str(doc_id))

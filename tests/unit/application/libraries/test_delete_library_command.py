@@ -15,7 +15,7 @@ def test_delete_library_returns_deleted_true_when_exists(library_factory):
     cmd = DeleteLibraryCommand(library_id=str(library.id))
     result = handler.handle(cmd)
 
-    assert result.deleted is True
+    assert result is None
     assert repo.find_by_id(library.id) is None
 
 
@@ -24,6 +24,9 @@ def test_delete_library_returns_false_when_missing():
     handler = DeleteLibraryHandler(repo)
     fake_id = str(LibraryId.generate())
     cmd = DeleteLibraryCommand(library_id=fake_id)
-    result = handler.handle(cmd)
 
-    assert result.deleted is False
+    try:
+        handler.handle(cmd)
+        assert False, "expected ValueError"
+    except ValueError:
+        pass

@@ -16,7 +16,8 @@ def test_update_library_endpoint(library_factory):
     req = UpdateLibraryRequest(name="New name")
     res = update_library(library_id=str(lib.id), request=req, handler=handler)
 
-    assert res.library_id == str(lib.id)
+    assert res is None
     updated = repo.find_by_id(lib.id)
+
     assert updated is not None
     assert updated.metadata.name == "New name"

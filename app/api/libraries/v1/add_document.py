@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, status
 from pydantic import BaseModel, ConfigDict
 
 from app.api.libraries.router import libraries_router as router
@@ -20,13 +20,12 @@ def get_add_document_handler(
 
 
 class AddDocumentResponse(BaseModel):
-    library_id: str
-    document_id: str
-    model_config = ConfigDict(from_attributes=True)
+    pass
 
 
 @router.post(
-    "/{library_id}/documents/{document_id}", response_model=AddDocumentResponse
+    "/{library_id}/documents/{document_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 def add_document(
     library_id: str,
@@ -34,7 +33,5 @@ def add_document(
     handler: AddDocumentHandler = Depends(get_add_document_handler),
 ):
     command = AddDocumentCommand(library_id=library_id, document_id=document_id)
-    response = handler.handle(command)
-    return AddDocumentResponse(
-        library_id=response.library_id, document_id=response.document_id
-    )
+    handler.handle(command)
+    return None

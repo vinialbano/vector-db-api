@@ -29,7 +29,6 @@ class AddChunkCommand:
 @dataclass
 class AddChunkResult:
     chunk_id: str
-    document_id: str
 
 
 @dataclass
@@ -60,4 +59,4 @@ class AddChunkHandler:
         document.add_chunk(chunk)
         self._document_repo.save(document)
 
-        return AddChunkResult(chunk_id=str(chunk_id), document_id=str(document_id))
+        return AddChunkResult(chunk_id=str(chunk_id))

@@ -1,7 +1,6 @@
 from app.application.libraries.add_document_command import (
     AddDocumentCommand,
     AddDocumentHandler,
-    AddDocumentResult,
 )
 from app.application.libraries.create_library_command import (
     CreateLibraryCommand,
@@ -11,7 +10,6 @@ from app.application.libraries.create_library_command import (
 from app.application.libraries.delete_library_command import (
     DeleteLibraryCommand,
     DeleteLibraryHandler,
-    DeleteLibraryResult,
 )
 from app.application.libraries.get_library_query import (
     GetLibraryHandler,
@@ -21,7 +19,6 @@ from app.application.libraries.get_library_query import (
 from app.application.libraries.index_library_command import (
     IndexLibraryCommand,
     IndexLibraryHandler,
-    IndexLibraryResult,
 )
 from app.application.libraries.remove_document_command import (
     RemoveDocumentCommand,
@@ -31,7 +28,6 @@ from app.application.libraries.remove_document_command import (
 from app.application.libraries.update_library_command import (
     UpdateLibraryCommand,
     UpdateLibraryHandler,
-    UpdateLibraryResult,
 )
 
 __all__ = [
@@ -40,19 +36,15 @@ __all__ = [
     "CreateLibraryResult",
     "DeleteLibraryCommand",
     "DeleteLibraryHandler",
-    "DeleteLibraryResult",
     "GetLibraryHandler",
     "GetLibraryQuery",
     "GetLibraryResult",
     "IndexLibraryCommand",
     "IndexLibraryHandler",
-    "IndexLibraryResult",
     "UpdateLibraryCommand",
     "UpdateLibraryHandler",
-    "UpdateLibraryResult",
     "AddDocumentCommand",
     "AddDocumentHandler",
-    "AddDocumentResult",
     "RemoveDocumentCommand",
     "RemoveDocumentHandler",
     "RemoveDocumentResult",

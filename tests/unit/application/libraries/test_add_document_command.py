@@ -23,10 +23,9 @@ def test_add_document_happy_path(library_factory, document_factory):
 
     handler = AddDocumentHandler(lib_repo, doc_repo)
     cmd = AddDocumentCommand(library_id=str(lib.id), document_id=str(doc.id))
-    res = handler.handle(cmd)
+    result = handler.handle(cmd)
 
-    assert res.library_id == str(lib.id)
-    assert res.document_id == str(doc.id)
+    assert result is None
 
     stored = lib_repo.find_by_id(lib.id)
     assert stored is not None

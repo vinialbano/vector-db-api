@@ -16,9 +16,12 @@ def test_inmemory_document_repository_crud(document_factory):
     all_docs = list(repo._store.values())
     assert doc in all_docs
 
-    deleted = repo.delete(doc.id)
-    assert deleted
+    repo.delete(doc.id)
     assert not repo.exists(doc.id)
 
     # deleting again returns False
-    assert not repo.delete(doc.id)
+    try:
+        repo.delete(doc.id)
+        assert False, "expected ValueError"
+    except ValueError:
+        pass

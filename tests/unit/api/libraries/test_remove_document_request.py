@@ -23,6 +23,4 @@ def test_remove_document_endpoint(library_factory, document_factory):
         library_id=str(lib.id), document_id=str(doc.id), handler=handler
     )
 
-    assert res.library_id == str(lib.id)
-    assert res.document_id == str(doc.id)
-    assert res.removed is True
+    assert res is None

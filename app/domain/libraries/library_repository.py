@@ -26,8 +26,8 @@ class LibraryRepository(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def delete(self, library_id: LibraryId) -> bool:
-        """Delete library, return True if existed"""
+    def delete(self, library_id: LibraryId) -> None:
+        """Delete library"""
         raise NotImplementedError()
 
     @abstractmethod

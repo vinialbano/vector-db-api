@@ -16,7 +16,7 @@ def test_update_library_updates_metadata(library_factory):
     )
     result = handler.handle(cmd)
 
-    assert result.library_id == str(library.id)
+    assert result is None
     saved = repo.find_by_id(library.id)
     assert saved is not None
     assert saved.metadata.name == "Updated"

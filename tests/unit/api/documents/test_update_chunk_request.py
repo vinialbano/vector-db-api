@@ -19,7 +19,7 @@ def test_update_chunk_endpoint(document_factory):
         document_id=str(doc.id), chunk_id=str(chunk.id), request=req, handler=handler
     )
 
-    assert res.document_id == str(doc.id)
-    assert res.chunk_id == str(chunk.id)
+    assert res is None
+
     updated = repo.find_by_id(doc.id)
     assert updated.chunks[0].text == "updated text"

@@ -13,5 +13,5 @@ def test_delete_document_endpoint(document_factory):
     repo.save(doc)
 
     res = delete_document(document_id=str(doc.id), handler=handler)
-    assert res.document_id == str(doc.id)
+    assert res is None
     assert not repo.exists(doc.id)

@@ -12,11 +12,11 @@ def test_delete_chunk_happy_path(document_factory, chunk_factory):
     repo.save(doc)
 
     handler = DeleteChunkHandler(repo)
-    dto = handler.handle(
+    result = handler.handle(
         DeleteChunkCommand(document_id=str(doc.id), chunk_id=str(c2.id))
     )
 
-    assert dto.deleted is True
+    assert result is None
     updated = repo.find_by_id(doc.id)
     assert updated is not None
     assert updated.chunk_count == 1
@@ -30,11 +30,11 @@ def test_delete_last_chunk_allowed(document_factory, chunk_factory):
     repo.save(doc)
 
     handler = DeleteChunkHandler(repo)
-    dto = handler.handle(
+    result = handler.handle(
         DeleteChunkCommand(document_id=str(doc.id), chunk_id=str(c1.id))
     )
 
-    assert dto.deleted is True
+    assert result is None
     updated = repo.find_by_id(doc.id)
     assert updated is not None
     assert updated.chunk_count == 0
