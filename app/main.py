@@ -28,7 +28,7 @@ def health_check():
 @app.exception_handler(InvalidEntityError)
 def invalid_entity_handler(request, exc: InvalidEntityError):
     return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
         content={"error": "Invalid entity", "details": str(exc)},
     )
 

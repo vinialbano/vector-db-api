@@ -14,8 +14,8 @@ client = TestClient(app)
 @pytest.fixture(autouse=True)
 def reset_repos():
     # Clear the in-memory repositories between tests
-    _document_repository_instance._store.clear()
-    _library_repository_instance._store.clear()
+    _document_repository_instance.clear()
+    _library_repository_instance.clear()
     yield
 
 

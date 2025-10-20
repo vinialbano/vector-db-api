@@ -1,4 +1,4 @@
-from app.errors import InvalidEntityError
+from app.errors import NotFoundError
 
 
 def test_document_allows_empty_initial_chunks(document_factory):
@@ -85,6 +85,6 @@ def test_document_get_chunk(document_factory, chunk_factory):
 
     try:
         doc.get_chunk(c2.id)
-        assert False, "expected InvalidEntityError"
-    except InvalidEntityError:
+        assert False, "expected NotFoundError"
+    except NotFoundError:
         pass
