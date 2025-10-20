@@ -1,11 +1,12 @@
-from fastapi.testclient import TestClient
 import pytest
+from fastapi.testclient import TestClient
 
-from app.main import app
 from app.container import (
     _document_repository_instance,
     _library_repository_instance,
 )
+from app.main import app
+
 # no direct domain imports needed in these integration tests
 
 client = TestClient(app)

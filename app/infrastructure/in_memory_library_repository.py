@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional
 from threading import RLock
+from typing import Dict, List, Optional
 
 from app.domain.libraries import Library, LibraryId
 from app.domain.libraries.library_repository import LibraryRepository

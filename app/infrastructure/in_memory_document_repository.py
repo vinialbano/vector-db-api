@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict
 from threading import RLock
+from typing import Dict
 
 from app.domain.documents import Document, DocumentId
 from app.domain.documents.document_repository import DocumentRepository

@@ -4,10 +4,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import pytest
 
-from app.infrastructure import InMemoryDocumentRepository, InMemoryLibraryRepository
 from app.domain.documents import Document, DocumentId, DocumentMetadata
 from app.domain.libraries import Library, LibraryId, LibraryMetadata
 from app.errors import NotFoundError
+from app.infrastructure import InMemoryDocumentRepository, InMemoryLibraryRepository
 
 
 def _make_doc(i: int) -> Document:
