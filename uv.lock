@@ -953,15 +953,19 @@ wheels = [
 [[package]]
 name = "vector-db-api"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "cohere" },
     { name = "fastapi", extra = ["standard"] },
     { name = "httpx" },
     { name = "numpy" },
     { name = "pydantic-settings" },
-    { name = "pytest" },
     { name = "uvicorn" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
 ]
 
 [package.metadata]
@@ -971,9 +975,10 @@ requires-dist = [
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "numpy", specifier = ">=2.3.0" },
     { name = "pydantic-settings", specifier = ">=2.11.0" },
-    { name = "pytest", specifier = ">=8.4.2" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4.2" },
     { name = "uvicorn", specifier = ">=0.38.0" },
 ]
+provides-extras = ["dev"]
 
 [[package]]
 name = "watchfiles"
