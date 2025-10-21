@@ -6,7 +6,7 @@ from app.application.libraries import (
     AddDocumentCommand,
     AddDocumentHandler,
 )
-from app.container import get_document_repository, get_library_repository
+from app.dependencies import get_document_repository, get_library_repository
 from app.domain.documents import DocumentRepository
 from app.domain.libraries import LibraryRepository
 

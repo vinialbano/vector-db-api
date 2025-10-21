@@ -9,18 +9,24 @@ from app.application.libraries import (
     CreateLibraryCommand,
     CreateLibraryHandler,
 )
-from app.container import get_document_repository, get_library_repository
+from app.dependencies import (
+    get_document_repository,
+    get_library_repository,
+    get_vector_index_factory,
+)
 from app.domain.documents import DocumentRepository
-from app.domain.libraries import KDTreeIndex, LibraryRepository
+from app.domain.libraries import LibraryRepository, VectorIndex
+from typing import Callable
 
 
 def get_create_library_handler(
     library_repo: LibraryRepository = Depends(get_library_repository),
     document_repo: DocumentRepository = Depends(get_document_repository),
+    vector_index_factory: Callable[[], VectorIndex] = Depends(get_vector_index_factory),
 ) -> CreateLibraryHandler:
     """DI provider for CreateLibraryHandler"""
 
-    return CreateLibraryHandler(library_repo, document_repo, lambda: KDTreeIndex())
+    return CreateLibraryHandler(library_repo, document_repo, vector_index_factory)
 
 
 class CreateLibraryRequest(BaseModel):

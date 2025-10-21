@@ -8,7 +8,7 @@ from app.application.libraries.find_similar_chunks_query import (
     FindSimilarChunksHandler,
     FindSimilarChunksQuery,
 )
-from app.container import get_library_repository
+from app.dependencies import get_library_repository
 from app.domain.libraries.library_repository import LibraryRepository
 
 

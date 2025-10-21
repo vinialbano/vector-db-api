@@ -6,6 +6,9 @@ services:
     volumes:
       - .:/app:rw
       - /app/.venv
+    environment:
+      # Choose vector index implementation: 'kd' (KDTree, default) or 'brute' (BruteForce)
+      VECTOR_INDEX_TYPE: "brute"
     ports:
       - "8000:8000"
     restart: unless-stopped

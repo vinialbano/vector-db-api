@@ -8,7 +8,7 @@ from app.application.documents import (
     UpdateDocumentCommand,
     UpdateDocumentHandler,
 )
-from app.container import get_document_repository
+from app.dependencies import get_document_repository
 from app.domain.documents.document_repository import DocumentRepository
 
 

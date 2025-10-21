@@ -8,7 +8,7 @@ from app.application.libraries import (
     GetLibraryHandler,
     GetLibraryQuery,
 )
-from app.container import get_library_repository
+from app.dependencies import get_library_repository
 from app.domain.libraries.library_repository import LibraryRepository
 
 

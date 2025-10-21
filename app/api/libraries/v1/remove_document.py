@@ -6,7 +6,7 @@ from app.application.libraries import (
     RemoveDocumentCommand,
     RemoveDocumentHandler,
 )
-from app.container import get_document_repository, get_library_repository
+from app.dependencies import get_document_repository, get_library_repository
 from app.domain.documents.document_repository import DocumentRepository
 from app.domain.libraries.library_repository import LibraryRepository
 

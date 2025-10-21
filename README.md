@@ -101,6 +101,30 @@ See full schemas and examples in the OpenAPI docs at `/docs` after starting the 
   - Brute-force index: O(n) query time, O(n) memory. Simple, exact nearest neighbor by scanning all vectors.
   - KD-tree index: faster for lower-dimensional data and read-heavy workloads; average query time O(log n) for balanced trees but degrades with high-dimensions.
 
+  ## Choosing a vector index implementation
+
+  You can choose which VectorIndex implementation the server will use when creating libraries. The selection is controlled by the environment variable `VECTOR_INDEX_TYPE`:
+
+  - `kd` (default) — use the KDTreeIndex implementation
+  - `brute` — use the BruteForceIndex implementation
+
+  Examples
+
+  Using the provided `docker-compose.yml` (the `web` service includes an `environment` entry):
+
+  ```bash
+  # Edit docker-compose.yml or override when running compose
+  export VECTOR_INDEX_TYPE=brute
+  docker compose up --build
+  ```
+
+  Or run locally with the variable set in your shell:
+
+  ```bash
+  export VECTOR_INDEX_TYPE=brute
+  uvicorn app.main:app --reload
+  ```
+
 - Thread-safety
 
   - In-memory repositories use `threading.RLock` to protect the internal dict store. This prevents simple race conditions during concurrent accesses in a multi-threaded server (uvicorn default workers).

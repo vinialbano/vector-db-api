@@ -5,7 +5,7 @@ from app.application.documents import (
     DeleteChunkCommand,
     DeleteChunkHandler,
 )
-from app.container import get_document_repository
+from app.dependencies import get_document_repository
 from app.domain.documents import DocumentRepository
 
 

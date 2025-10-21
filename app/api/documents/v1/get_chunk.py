@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from app.api.documents.router import documents_router as router
 from app.application.documents import GetChunkHandler, GetChunkQuery
-from app.container import get_document_repository
+from app.dependencies import get_document_repository
 from app.domain.documents.document_repository import DocumentRepository
 
 

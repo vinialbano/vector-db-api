@@ -6,7 +6,7 @@ from app.application.libraries import (
     DeleteLibraryCommand,
     DeleteLibraryHandler,
 )
-from app.container import get_library_repository
+from app.dependencies import get_library_repository
 from app.domain.libraries import LibraryRepository
 
 

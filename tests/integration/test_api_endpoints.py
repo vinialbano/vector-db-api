@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from app.container import (
+from app.dependencies import (
     _document_repository_instance,
     _library_repository_instance,
 )

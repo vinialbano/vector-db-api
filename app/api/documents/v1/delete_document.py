@@ -6,7 +6,7 @@ from app.application.documents import (
     DeleteDocumentCommand,
     DeleteDocumentHandler,
 )
-from app.container import get_document_repository
+from app.dependencies import get_document_repository
 from app.domain.documents import DocumentRepository
 
 
