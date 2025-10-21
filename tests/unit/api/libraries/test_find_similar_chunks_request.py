@@ -3,8 +3,8 @@ from app.api.libraries.v1.find_similar_chunks import (
     find_similar_chunks,
 )
 from app.application.libraries import FindSimilarChunksHandler
-from app.infrastructure import InMemoryLibraryRepository
 from app.domain.libraries.indexed_chunk import IndexedChunk
+from app.infrastructure import InMemoryLibraryRepository
 
 
 def test_find_similar_chunks_presentation(library_factory, document_factory):

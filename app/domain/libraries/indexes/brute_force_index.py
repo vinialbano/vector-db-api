@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 from app.domain.common import Embedding
 from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.domain.libraries.vector_index import VectorIndex
-from app.errors import InvalidEntityError, IndexNotBuiltError
+from app.errors import IndexNotBuiltError, InvalidEntityError
 
 
 @dataclass

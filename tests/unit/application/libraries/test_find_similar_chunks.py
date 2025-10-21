@@ -1,7 +1,7 @@
 from app.application.libraries import FindSimilarChunksHandler, FindSimilarChunksQuery
+from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.errors import InvalidEntityError
 from app.infrastructure import InMemoryLibraryRepository
-from app.domain.libraries.indexed_chunk import IndexedChunk
 
 
 def test_find_similar_chunks_happy_path(library_factory, document_factory):

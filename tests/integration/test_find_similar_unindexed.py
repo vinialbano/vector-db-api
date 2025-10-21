@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 
-
 client = TestClient(app)
 
 
@@ -23,7 +22,10 @@ def test_find_similar_unindexed_returns_409():
     lib = create_res.json()
 
     # call the API endpoint - we intentionally don't build the index
-    res = client.post(f"/libraries/{lib['library_id']}/find-similar", json={"embedding": [0.0], "k": 1})
+    res = client.post(
+        f"/libraries/{lib['library_id']}/find-similar",
+        json={"embedding": [0.0], "k": 1},
+    )
 
     assert res.status_code == 409
     body = res.json()

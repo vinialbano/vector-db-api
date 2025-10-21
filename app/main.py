@@ -3,8 +3,7 @@ from fastapi.responses import JSONResponse
 
 from app.api.documents import documents_router
 from app.api.libraries import libraries_router
-from app.errors import InvalidEntityError, NotFoundError
-from app.errors import IndexNotBuiltError
+from app.errors import IndexNotBuiltError, InvalidEntityError, NotFoundError
 
 app = FastAPI(
     title="Vector DB API",

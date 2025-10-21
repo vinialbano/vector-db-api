@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Callable, Dict
 from uuid import UUID
 
 from fastapi import Depends, status
@@ -16,7 +16,6 @@ from app.dependencies import (
 )
 from app.domain.documents import DocumentRepository
 from app.domain.libraries import LibraryRepository, VectorIndex
-from typing import Callable
 
 
 def get_create_library_handler(
