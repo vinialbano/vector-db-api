@@ -1,7 +1,5 @@
-from fastapi import Depends, status
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, status
 
-from app.api.libraries.router import libraries_router as router
 from app.application.libraries import (
     AddDocumentCommand,
     AddDocumentHandler,
@@ -9,6 +7,8 @@ from app.application.libraries import (
 from app.dependencies import get_document_repository, get_library_repository
 from app.domain.documents import DocumentRepository
 from app.domain.libraries import LibraryRepository
+
+add_document_router = APIRouter()
 
 
 def get_add_document_handler(
@@ -19,11 +19,7 @@ def get_add_document_handler(
     return AddDocumentHandler(library_repo, document_repo)
 
 
-class AddDocumentResponse(BaseModel):
-    pass
-
-
-@router.post(
+@add_document_router.post(
     "/{library_id}/documents/{document_id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )

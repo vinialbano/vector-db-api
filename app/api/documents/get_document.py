@@ -1,15 +1,16 @@
 from typing import Any, Dict, List
 
-from fastapi import Depends
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from app.api.documents.router import documents_router as router
 from app.application.documents import (
     GetDocumentHandler,
     GetDocumentQuery,
 )
 from app.dependencies import get_document_repository
 from app.domain.documents.document_repository import DocumentRepository
+
+get_document_router = APIRouter()
 
 
 def get_get_document_handler(
@@ -48,7 +49,7 @@ class GetDocumentResponse(BaseModel):
     chunks: List[ChunkResponse]
 
 
-@router.get("/{document_id}", response_model=GetDocumentResponse)
+@get_document_router.get("/{document_id}", response_model=GetDocumentResponse)
 def get_document(
     document_id: str, handler: GetDocumentHandler = Depends(get_get_document_handler)
 ):

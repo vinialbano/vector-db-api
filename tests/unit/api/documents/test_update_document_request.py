@@ -1,4 +1,4 @@
-from app.api.documents.v1.update_document import (
+from app.api.documents.update_document import (
     UpdateDocumentRequest,
     update_document,
 )

@@ -1,4 +1,4 @@
-from app.api.documents.v1.add_chunk import (
+from app.api.documents.add_chunk import (
     AddChunkRequest,
     add_chunk,
 )

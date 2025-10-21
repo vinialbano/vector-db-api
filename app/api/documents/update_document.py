@@ -1,15 +1,16 @@
 from typing import Any, Dict, Optional
 
-from fastapi import Depends, status
+from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel, ConfigDict
 
-from app.api.documents.router import documents_router as router
 from app.application.documents import (
     UpdateDocumentCommand,
     UpdateDocumentHandler,
 )
 from app.dependencies import get_document_repository
 from app.domain.documents.document_repository import DocumentRepository
+
+update_document_router = APIRouter()
 
 
 def get_update_document_handler(
@@ -28,7 +29,7 @@ class UpdateDocumentResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.patch(
+@update_document_router.patch(
     "/{document_id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )

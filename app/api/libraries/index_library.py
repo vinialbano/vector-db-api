@@ -1,7 +1,6 @@
-from fastapi import Depends, status
+from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel, ConfigDict
 
-from app.api.libraries.router import libraries_router as router
 from app.application.libraries import (
     IndexLibraryCommand,
     IndexLibraryHandler,
@@ -9,6 +8,8 @@ from app.application.libraries import (
 from app.dependencies import get_document_repository, get_library_repository
 from app.domain.documents.document_repository import DocumentRepository
 from app.domain.libraries import LibraryIndexerService, LibraryRepository
+
+index_library_router = APIRouter()
 
 
 def get_library_indexer_service(
@@ -30,7 +31,7 @@ class IndexLibraryResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.patch(
+@index_library_router.patch(
     "/{library_id}/index",
     status_code=status.HTTP_204_NO_CONTENT,
 )

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import List
 
 from app.domain.common import Embedding
 from app.domain.documents.chunk_metadata import ChunkMetadataFilterDict

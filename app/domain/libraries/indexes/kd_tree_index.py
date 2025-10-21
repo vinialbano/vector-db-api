@@ -1,6 +1,6 @@
 import heapq
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 from app.domain.common import Embedding
 from app.domain.documents.chunk_metadata import ChunkMetadataFilterDict

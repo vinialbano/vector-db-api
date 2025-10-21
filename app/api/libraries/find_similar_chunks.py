@@ -1,9 +1,8 @@
 from typing import Any, Dict, List
 
-from fastapi import Depends
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from app.api.libraries.router import libraries_router as router
 from app.application.libraries.find_similar_chunks_query import (
     FindSimilarChunksHandler,
     FindSimilarChunksQuery,
@@ -11,6 +10,8 @@ from app.application.libraries.find_similar_chunks_query import (
 from app.dependencies import get_library_repository
 from app.domain.documents.chunk_metadata import ChunkMetadataFilterDict
 from app.domain.libraries.library_repository import LibraryRepository
+
+find_similar_chunks_router = APIRouter()
 
 
 def get_find_similar_chunks_handler(
@@ -48,7 +49,10 @@ class FindSimilarResponse(BaseModel):
     chunks: List[ChunkResponse]
 
 
-@router.post("/{library_id}/find-similar", response_model=FindSimilarResponse)
+@find_similar_chunks_router.post(
+    "/{library_id}/find-similar",
+    response_model=FindSimilarResponse,
+)
 def find_similar_chunks(
     library_id: str,
     req: FindSimilarRequest,

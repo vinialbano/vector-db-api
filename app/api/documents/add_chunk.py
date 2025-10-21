@@ -1,12 +1,13 @@
 from typing import Dict, List
 
-from fastapi import Depends, status
+from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.api.documents.router import documents_router as router
 from app.application.documents import AddChunkCommand, AddChunkHandler
 from app.dependencies import get_document_repository
 from app.domain.documents import DocumentRepository
+
+add_chunk_router = APIRouter()
 
 
 def get_add_chunk_handler(
@@ -44,7 +45,7 @@ class AddChunkResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.post(
+@add_chunk_router.post(
     "/{document_id}/chunks",
     status_code=status.HTTP_201_CREATED,
     response_model=AddChunkResponse,

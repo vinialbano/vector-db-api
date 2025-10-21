@@ -1,15 +1,16 @@
 from typing import Any, Dict, List
 
-from fastapi import Depends, status
+from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.api.documents.router import documents_router as router
 from app.application.documents import (
     CreateDocumentCommand,
     CreateDocumentHandler,
 )
 from app.dependencies import get_document_repository
 from app.domain.documents import DocumentRepository
+
+create_document_router = APIRouter()
 
 
 def get_create_document_handler(
@@ -98,7 +99,7 @@ class CreateDocumentResponse(BaseModel):
     )
 
 
-@router.post(
+@create_document_router.post(
     "/",
     status_code=status.HTTP_201_CREATED,
     response_model=CreateDocumentResponse,

@@ -1,4 +1,4 @@
-from app.api.documents.v1.create_document import (
+from app.api.documents.create_document import (
     CreateDocumentRequest,
     create_document,
 )

@@ -1,4 +1,4 @@
-from app.api.documents.v1.update_chunk import (
+from app.api.documents.update_chunk import (
     UpdateChunkRequest,
     update_chunk,
 )

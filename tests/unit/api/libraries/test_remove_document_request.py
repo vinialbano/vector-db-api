@@ -1,4 +1,5 @@
-from app.api.libraries.v1.remove_document import remove_document
+from app.api.libraries.remove_document import remove_document
+
 from app.application.libraries import RemoveDocumentHandler
 from app.infrastructure import (
     InMemoryDocumentRepository,

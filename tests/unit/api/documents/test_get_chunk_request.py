@@ -1,4 +1,4 @@
-from app.api.documents.v1.get_chunk import get_chunk
+from app.api.documents.get_chunk import get_chunk
 from app.application.documents import GetChunkHandler
 from app.infrastructure import InMemoryDocumentRepository
 

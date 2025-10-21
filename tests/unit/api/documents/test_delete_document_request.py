@@ -1,4 +1,4 @@
-from app.api.documents.v1.delete_document import (
+from app.api.documents.delete_document import (
     delete_document,
 )
 from app.application.documents import DeleteDocumentHandler

@@ -42,8 +42,8 @@ def test_find_similar_chunks_with_filters(library_factory, document_factory):
         ]
     )
     # ensure we have two different sources by creating a second chunk manually
-    from app.domain.documents import Chunk, ChunkMetadata, ChunkId
     from app.domain.common import Embedding
+    from app.domain.documents import Chunk, ChunkId, ChunkMetadata
 
     c1 = doc.chunks[0]
     c2 = Chunk(

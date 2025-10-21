@@ -1,15 +1,16 @@
 from typing import Any, Dict, List
 
-from fastapi import Depends
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from app.api.libraries.router import libraries_router as router
 from app.application.libraries import (
     GetLibraryHandler,
     GetLibraryQuery,
 )
 from app.dependencies import get_library_repository
 from app.domain.libraries.library_repository import LibraryRepository
+
+get_library_router = APIRouter()
 
 
 def get_get_library_handler(
@@ -48,7 +49,10 @@ class LibraryResponse(BaseModel):
     indexed_chunks: List[ChunkResponse]
 
 
-@router.get("/{library_id}", response_model=LibraryResponse)
+@get_library_router.get(
+    "/{library_id}",
+    response_model=LibraryResponse,
+)
 def get_library(
     library_id: str, handler: GetLibraryHandler = Depends(get_get_library_handler)
 ):

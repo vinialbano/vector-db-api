@@ -1,4 +1,4 @@
-from app.api.documents.v1.get_document import get_document
+from app.api.documents.get_document import get_document
 from app.application.documents import GetDocumentHandler
 from app.infrastructure import InMemoryDocumentRepository
 

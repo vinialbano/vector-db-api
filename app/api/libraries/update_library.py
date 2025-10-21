@@ -1,15 +1,16 @@
 from typing import Any, Dict, Optional
 
-from fastapi import Depends, status
+from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel, ConfigDict
 
-from app.api.libraries.router import libraries_router as router
 from app.application.libraries import (
     UpdateLibraryCommand,
     UpdateLibraryHandler,
 )
 from app.dependencies import get_library_repository
 from app.domain.libraries import LibraryRepository
+
+update_library_router = APIRouter()
 
 
 def get_update_library_handler(
@@ -29,7 +30,10 @@ class UpdateLibraryResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.patch("/{library_id}", status_code=status.HTTP_204_NO_CONTENT)
+@update_library_router.patch(
+    "/{library_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 def update_library(
     library_id: str,
     request: UpdateLibraryRequest,

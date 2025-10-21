@@ -1,12 +1,13 @@
-from fastapi import Depends, status
+from fastapi import APIRouter, Depends, status
 
-from app.api.documents.router import documents_router as router
 from app.application.documents import (
     DeleteChunkCommand,
     DeleteChunkHandler,
 )
 from app.dependencies import get_document_repository
 from app.domain.documents import DocumentRepository
+
+delete_chunk_router = APIRouter()
 
 
 def get_delete_chunk_handler(
@@ -16,7 +17,7 @@ def get_delete_chunk_handler(
     return DeleteChunkHandler(document_repo)
 
 
-@router.delete(
+@delete_chunk_router.delete(
     "/{document_id}/chunks/{chunk_id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )

@@ -1,7 +1,6 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, ConfigDict
 
-from app.api.libraries.router import libraries_router as router
 from app.application.libraries import (
     RemoveDocumentCommand,
     RemoveDocumentHandler,
@@ -9,6 +8,8 @@ from app.application.libraries import (
 from app.dependencies import get_document_repository, get_library_repository
 from app.domain.documents.document_repository import DocumentRepository
 from app.domain.libraries.library_repository import LibraryRepository
+
+remove_document_router = APIRouter()
 
 
 def get_remove_document_handler(
@@ -23,7 +24,7 @@ class RemoveDocumentResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.delete(
+@remove_document_router.delete(
     "/{library_id}/documents/{document_id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )

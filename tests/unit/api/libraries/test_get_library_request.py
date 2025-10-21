@@ -1,4 +1,5 @@
-from app.api.libraries.v1.get_library import get_library
+from app.api.libraries.get_library import get_library
+
 from app.application.libraries import GetLibraryHandler
 from app.infrastructure import InMemoryLibraryRepository
 

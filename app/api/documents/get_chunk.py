@@ -1,12 +1,13 @@
 from typing import Any, Dict, List
 
-from fastapi import Depends
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from app.api.documents.router import documents_router as router
 from app.application.documents import GetChunkHandler, GetChunkQuery
 from app.dependencies import get_document_repository
 from app.domain.documents.document_repository import DocumentRepository
+
+get_chunk_router = APIRouter()
 
 
 def get_get_chunk_handler(
@@ -22,7 +23,7 @@ class GetChunkResponse(BaseModel):
     metadata: Dict[str, Any]
 
 
-@router.get(
+@get_chunk_router.get(
     "/{document_id}/chunks/{chunk_id}",
     response_model=GetChunkResponse,
 )

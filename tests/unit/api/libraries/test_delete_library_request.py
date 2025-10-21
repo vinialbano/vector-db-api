@@ -1,4 +1,5 @@
-from app.api.libraries.v1.delete_library import delete_library
+from app.api.libraries.delete_library import delete_library
+
 from app.application.libraries import DeleteLibraryHandler
 from app.infrastructure import InMemoryLibraryRepository
 

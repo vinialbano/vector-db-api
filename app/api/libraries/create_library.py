@@ -1,10 +1,9 @@
 from typing import Callable, Dict
 from uuid import UUID
 
-from fastapi import Depends, status
+from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.api.libraries.router import libraries_router as router
 from app.application.libraries import (
     CreateLibraryCommand,
     CreateLibraryHandler,
@@ -16,6 +15,8 @@ from app.dependencies import (
 )
 from app.domain.documents import DocumentRepository
 from app.domain.libraries import LibraryRepository, VectorIndex
+
+create_library_router = APIRouter()
 
 
 def get_create_library_handler(
@@ -62,8 +63,10 @@ class CreateLibraryResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-@router.post(
-    "/", status_code=status.HTTP_201_CREATED, response_model=CreateLibraryResponse
+@create_library_router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    response_model=CreateLibraryResponse,
 )
 def create_library(
     request: CreateLibraryRequest,

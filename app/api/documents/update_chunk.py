@@ -1,15 +1,16 @@
 from typing import Any, Dict, List, Optional
 
-from fastapi import Depends, status
+from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel
 
-from app.api.documents.router import documents_router as router
 from app.application.documents import (
     UpdateChunkCommand,
     UpdateChunkHandler,
 )
 from app.dependencies import get_document_repository
 from app.domain.documents.document_repository import DocumentRepository
+
+update_chunk_router = APIRouter()
 
 
 def get_update_chunk_handler(
@@ -25,7 +26,7 @@ class UpdateChunkRequest(BaseModel):
     metadata: Optional[Dict[str, Any]] = None
 
 
-@router.patch(
+@update_chunk_router.patch(
     "/{document_id}/chunks/{chunk_id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
