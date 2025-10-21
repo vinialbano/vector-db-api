@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from typing import List
+from typing import Any, Dict, List
 
 from app.domain.common import Embedding
+from app.domain.documents.chunk_metadata import ChunkMetadataFilterDict
 from app.domain.libraries import LibraryId, LibraryRepository
 from app.domain.libraries.indexed_chunk import IndexedChunkDict
 from app.errors import NotFoundError
@@ -13,6 +14,7 @@ class FindSimilarChunksQuery:
     embedding: List[float]
     k: int = 5
     min_similarity: float = 0.0
+    filters: ChunkMetadataFilterDict | None = None
 
 
 class SimilarChunkDict(IndexedChunkDict):
@@ -38,7 +40,12 @@ class FindSimilarChunksHandler:
         emb = Embedding.from_list(query.embedding)
         # Delegate to domain - let domain validation errors (e.g. index not built)
         # propagate to the application/API layer so callers receive a clear error.
-        raw = library.find_similar_chunks(emb, query.k, query.min_similarity)
+        raw = library.find_similar_chunks(
+            emb,
+            query.k,
+            query.filters,
+            query.min_similarity,
+        )
 
         chunks: List[SimilarChunkDict] = []
         for c, score in raw:

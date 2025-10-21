@@ -136,7 +136,6 @@ See full schemas and examples in the OpenAPI docs at `/docs` after starting the 
 ## Next steps / improvements
 
 - Persistence: add JSON/SQLite persistence to survive restarts.
-- Metadata filtering: expose API support for meta-filtered k-NN queries.
 - CI: add GitHub Actions to run tests on push/PR.
 - Generate embeddings on demand, with Cohere API
 - Optional: SDK client, temporal durable workflows, and leader-follower replication.

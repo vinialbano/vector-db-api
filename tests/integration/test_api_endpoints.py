@@ -102,6 +102,16 @@ def test_library_flow_and_find_similar():
     assert isinstance(body, dict)
     assert "chunks" in body and isinstance(body["chunks"], list)
 
+    # find similar with filters (no chunks should match an unlikely source)
+    q2 = {"embedding": [1.0, 0.0], "k": 5, "filters": {"source": "nonexistent"}}
+    r2 = client.post(f"/libraries/{lib_id}/find-similar", json=q2)
+    assert r2.status_code == 200
+    body2 = r2.json()
+    assert isinstance(body2, dict)
+    # expecting zero chunks when filter doesn't match
+    assert "chunks" in body2 and isinstance(body2["chunks"], list)
+    assert len(body2["chunks"]) == 0
+
 
 def test_invalid_id_returns_422():
     # malformed uuid should return 422 from InvalidEntityError mapping

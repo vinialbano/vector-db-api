@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List
+from typing import Any, Dict, List
 
 from app.domain.common import Embedding
+from app.domain.documents.chunk_metadata import ChunkMetadataFilterDict
 from app.domain.libraries.indexed_chunk import IndexedChunk
 
 
@@ -16,7 +17,9 @@ class VectorIndex(ABC):
         ...
 
     @abstractmethod
-    def search(self, query: Embedding, k: int) -> List[IndexedChunk]:
+    def search(
+        self, query: Embedding, k: int, filters: ChunkMetadataFilterDict | None = None
+    ) -> List[IndexedChunk]:
         """Search the index for the k most similar chunks to the query embedding"""
         ...
 

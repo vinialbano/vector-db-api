@@ -2,7 +2,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any, Dict, TypedDict
+
+
+class ChunkMetadataFilterDict(TypedDict, total=False):
+    source: str
+    page_number: int
+    created_after: datetime
+    created_before: datetime
 
 
 @dataclass
@@ -43,7 +50,7 @@ class ChunkMetadata:
             custom_fields=new_custom,
         )
 
-    def matches_filter(self, filters: Dict[str, Any]) -> bool:
+    def matches_filter(self, filters: ChunkMetadataFilterDict) -> bool:
         """Check whether this metadata matches the provided filters.
 
         Supported filters: 'source', 'page_number', 'created_after', 'created_before'.

@@ -31,6 +31,46 @@ def test_find_similar_chunks_happy_path(library_factory, document_factory):
     )
 
 
+def test_find_similar_chunks_with_filters(library_factory, document_factory):
+    repo = InMemoryLibraryRepository()
+    lib = library_factory()
+    # create a document with chunks and index them into the library
+    # create two chunks with different 'source' metadata so filters can be applied
+    doc = document_factory(
+        chunks=[
+            document_factory().chunks[0],
+        ]
+    )
+    # ensure we have two different sources by creating a second chunk manually
+    from app.domain.documents import Chunk, ChunkMetadata, ChunkId
+    from app.domain.common import Embedding
+
+    c1 = doc.chunks[0]
+    c2 = Chunk(
+        id=ChunkId.generate(),
+        text="other",
+        embedding=Embedding.from_list(list(c1.embedding.values)),
+        metadata=ChunkMetadata(source="other_source"),
+    )
+    indexed = [IndexedChunk.from_chunk(c, doc.id) for c in [c1, c2]]
+    lib.index(indexed)
+    repo.save(lib)
+
+    handler = FindSimilarChunksHandler(repo)
+    sample_embedding = list(lib.get_indexed_chunks()[0].embedding.values)
+    # apply a filter that should only match the first chunk's source
+    q = FindSimilarChunksQuery(
+        library_id=str(lib.id),
+        embedding=sample_embedding,
+        k=5,
+        filters={"source": "test"},
+    )
+    res = handler.handle(q)
+    assert isinstance(res.chunks, list)
+    # all returned chunks should have metadata.source == 'test'
+    assert all(ch["metadata"]["source"] == "test" for ch in res.chunks)
+
+
 def test_find_similar_chunks_library_not_found():
     repo = InMemoryLibraryRepository()
     handler = FindSimilarChunksHandler(repo)

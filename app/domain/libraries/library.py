@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, List, Tuple
+from typing import Any, Callable, Dict, List, Tuple
 
 from app.domain.common.decorators import refresh_timestamp_after
 from app.domain.common.embedding import Embedding
@@ -93,12 +93,13 @@ class Library:
         self,
         query_embedding: Embedding,
         k: int,
+        filters: Dict[str, Any] | None = None,
         min_similarity: float = 0.0,
     ) -> List[Tuple[IndexedChunk, float]]:
         """Find the k most similar chunks to the given query embedding"""
         if k <= 0:
             raise InvalidEntityError("k must be a positive integer")
-        results = self.vector_index.search(query_embedding, k)
+        results = self.vector_index.search(query_embedding, k, filters)
 
         # Compute similarity and filter
         scored: List[Tuple[IndexedChunk, float]] = []

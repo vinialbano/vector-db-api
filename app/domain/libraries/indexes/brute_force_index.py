@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
 from app.domain.common import Embedding
+from app.domain.documents.chunk_metadata import ChunkMetadataFilterDict
 from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.domain.libraries.vector_index import VectorIndex
 from app.errors import IndexNotBuiltError, InvalidEntityError
@@ -38,7 +39,7 @@ class BruteForceIndex(VectorIndex):
         self._chunks = chunks
 
     def search(
-        self, query: Embedding, k: int, filters: Dict[str, Any] | None = None
+        self, query: Embedding, k: int, filters: ChunkMetadataFilterDict | None = None
     ) -> List[IndexedChunk]:
         if not self._chunks:
             raise IndexNotBuiltError(

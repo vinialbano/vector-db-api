@@ -9,6 +9,7 @@ from app.application.libraries.find_similar_chunks_query import (
     FindSimilarChunksQuery,
 )
 from app.dependencies import get_library_repository
+from app.domain.documents.chunk_metadata import ChunkMetadataFilterDict
 from app.domain.libraries.library_repository import LibraryRepository
 
 
@@ -39,6 +40,7 @@ class FindSimilarRequest(BaseModel):
     embedding: List[float]
     k: int = 5
     min_similarity: float = 0.0
+    filters: ChunkMetadataFilterDict | None = None
 
 
 class FindSimilarResponse(BaseModel):
@@ -57,6 +59,7 @@ def find_similar_chunks(
         embedding=req.embedding,
         k=req.k,
         min_similarity=req.min_similarity,
+        filters=req.filters,
     )
     res = handler.handle(query)
     return FindSimilarResponse(library_id=res.library_id, chunks=res.chunks)

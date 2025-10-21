@@ -181,7 +181,10 @@ POST {{baseUrl}}/libraries/{{libId}}/find-similar
 Content-Type: application/json
 
 {
-  "k": 1,
+  "k": 10,
+  "filters": {
+    "source": "Goodreads"
+  },
   "embedding": [
     -0.058014095,
     -0.010915021,
