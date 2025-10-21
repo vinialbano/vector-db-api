@@ -1,141 +1,389 @@
 # Vector DB API
 
-Lightweight Vector Database REST API built with FastAPI. This project provides a small domain model (Chunk, Document, Library), in-memory repositories, two vector index implementations (brute-force and KD-tree), application/service layers, and HTTP endpoints to CRUD documents/libraries and perform k-NN similarity search.
+> A lightweight, educational vector database REST API built with FastAPI to demonstrate clean architecture and domain-driven design principles.
 
-This repository was created as a take-home task to demonstrate clear design, testing, and basic operational support (Docker).
+**What it does**: Store text documents with their embeddings, organize them into libraries, and perform k-nearest neighbor (k-NN) similarity searches using different vector indexing strategies.
 
-## Architectural approach
+**Why it exists**: This project demonstrates production-quality architectural patterns, testing practices, and operational readiness for a moderately complex domain.
 
-This project follows several complementary architectural patterns to keep the code organized and maintainable:
+## Table of Contents
 
-- Domain-Driven Design (DDD): core domain concepts (value objects, entities, aggregates, domain services) live under `app/domain`. Business invariants and domain logic belong here.
-- Clean Architecture: layers are separated (API, Application, Domain, Infrastructure). The application layer orchestrates use-cases and keeps HTTP/controllers thin.
-- Vertical Slice Architecture (VSA): features are co-located (for example `documents` routes, handlers, and related application/domain code are organized so a feature is easy to reason about and evolve), while still respecting layer boundaries.
+**Getting Started** (Practical)
 
-This combination makes it straightforward to add or change features with minimal cross-cutting changes.
+- [Quick Start](#quick-start)
+- [API Usage](#api-usage)
+- [Development](#development)
+  - [Running Tests](#running-tests)
+  - [Payload Generator Tool](#payload-generator-tool)
+- [Configuration](#configuration)
 
-## Highlights
+**Understanding the System** (Theoretical)
 
-- FastAPI app with modular routers under `app/api`.
-- Domain layer under `app/domain` (value objects, entities, aggregates, indexes).
-- Application layer under `app/application` (commands/queries, handlers).
-- In-memory repositories in `app/infrastructure` (thread-safe with RLock).
-- Custom errors in `app/errors.py` mapped to HTTP statuses (InvalidEntityError -> 422, NotFoundError -> 404, IndexNotBuiltError -> 409).
-- Unit tests and integration tests included (`tests/`).
-- Dockerfile and `docker-compose.yml` for local development.
+- [How It Works](#how-it-works)
+- [Architecture](#architecture)
+  - [High-Level Overview](#high-level-overview)
+  - [Domain Model](#domain-model)
+  - [Layer Responsibilities](#layer-responsibilities)
+  - [Architectural Patterns](#architectural-patterns)
+- [Vector Index Implementations](#vector-index-implementations)
+- [What's Next?](#whats-next)
 
-## Quickstart
+---
 
-Requirements: Python 3.13, Docker (optional)
+## Quick Start
 
-Run locally (recommended in a virtualenv):
+**Requirements**: Python 3.13, Docker (optional)
+
+### Option 1: Local Development (Recommended)
 
 ```bash
+# 1. Create virtual environment
 python -m venv .venv
 source .venv/bin/activate
+
+# 2. Install dependencies
 uv sync
+
+# 3. Run the server
 uvicorn app.main:app --reload
 ```
 
-Visit http://localhost:8000/docs for interactive API docs.
+Visit **http://localhost:8000/docs** for interactive API documentation.
 
-Run tests:
-
-```bash
-pytest -q
-```
-
-Docker (local dev with live-reload):
+### Option 2: Docker
 
 ```bash
+# With docker-compose (includes live-reload)
 docker compose up --build
-```
 
-Or build/run the image manually:
-
-```bash
+# Or manually
 docker build -t vector-db-api:local .
 docker run --rm -p 8000:8000 vector-db-api:local
 ```
 
-## Choosing a vector index implementation
+---
 
-You can choose which VectorIndex implementation the server will use when creating libraries. The selection is controlled by the environment variable `VECTOR_INDEX_TYPE`:
+## API Usage
 
-- `kd` (default) — use the KDTreeIndex implementation
-- `brute` — use the BruteForceIndex implementation
+### Key Endpoints
 
-Examples
+| Method  | Endpoint                             | Purpose                       |
+| ------- | ------------------------------------ | ----------------------------- |
+| `POST`  | `/documents/`                        | Create a document with chunks |
+| `GET`   | `/documents/{id}`                    | Retrieve document details     |
+| `POST`  | `/documents/{id}/chunks`             | Add a chunk to a document     |
+| `POST`  | `/libraries/`                        | Create a library              |
+| `POST`  | `/libraries/{id}/documents/{doc_id}` | Add document to library       |
+| `PATCH` | `/libraries/{id}/index`              | Build the vector index        |
+| `POST`  | `/libraries/{id}/find-similar`       | Search for similar chunks     |
 
-Using the provided `docker-compose.yml` (the `web` service includes an `environment` entry):
+### Interactive Documentation
+
+Once the server is running, visit:
+
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+
+---
+
+## Development
+
+### Running Tests
 
 ```bash
-# Edit docker-compose.yml or override when running compose
+# Run all tests
+pytest
+
+# Run with less verbosity
+pytest -q
+
+# Run specific test file
+pytest tests/unit/domain/test_document.py
+
+# Run with coverage
+pytest --cov=app --cov-report=term-missing
+
+# Run only unit tests
+pytest tests/unit/
+
+# Run only integration tests
+pytest tests/integration/
+```
+
+**Test Structure**:
+
+```
+tests/
+├── unit/              # Isolated component tests
+│   ├── api/           # API layer tests
+│   ├── application/   # Command/query handler tests
+│   ├── domain/        # Domain logic tests
+│   └── infrastructure/ # Repository tests
+└── integration/       # End-to-end API tests
+```
+
+### Payload Generator Tool
+
+Generate test data with real Cohere embeddings:
+
+```bash
+# Set your API key
+export COHERE_API_KEY="your-api-key"
+
+# Generate from file
+python tools/payload_generator.py --texts-file data.txt
+
+# Generate from inline text
+python tools/payload_generator.py --text "First text" --text "Second text"
+```
+
+Outputs document and chunk JSON payloads ready for API testing.
+
+---
+
+## Configuration
+
+### Vector Index Selection
+
+Choose between two indexing strategies using the `VECTOR_INDEX_TYPE` environment variable:
+
+| Implementation        | Query Time   | Build Time | Memory | Best For                                                |
+| --------------------- | ------------ | ---------- | ------ | ------------------------------------------------------- |
+| **KD-Tree** (default) | O(log n) avg | O(n log n) | O(n)   | Low-dimensional vectors (<20D), read-heavy workloads    |
+| **Brute Force**       | O(n)         | O(1)       | O(n)   | High-dimensional vectors, small datasets, exact results |
+
+**Set the configuration**:
+
+```bash
+# Use KD-tree (default)
+export VECTOR_INDEX_TYPE=kd
+uvicorn app.main:app --reload
+
+# Use brute-force
+export VECTOR_INDEX_TYPE=brute
+uvicorn app.main:app --reload
+
+# With Docker Compose
 export VECTOR_INDEX_TYPE=brute
 docker compose up --build
 ```
 
-Or run locally with the variable set in your shell:
+Alternatively, create a `.env` file (use `.env.example` as template):
 
 ```bash
-export VECTOR_INDEX_TYPE=brute
-uvicorn app.main:app --reload
+VECTOR_INDEX_TYPE=kd  # Options: kd, brute
 ```
 
-## Generating test payloads from Cohere
+**Why this matters**: KD-tree offers faster searches for lower-dimensional data but degrades with high dimensions. Brute-force is simpler and guarantees exact results by scanning all vectors.
 
-If you want to generate API-shaped document and chunk payloads from Cohere embeddings (for testing or seeding), there's a small helper in `tools/` that calls Cohere and writes JSON payloads.
+---
 
-Prerequisites:
+## How It Works
 
-- Export your Cohere API key: `export COHERE_API_KEY="sk-..."`.
+This API follows a simple workflow for vector similarity search:
 
-Quick usage:
+```mermaid
+flowchart LR
+    A[Create Documents<br/>with embeddings] --> B[Create Library]
+    B --> C[Add Documents<br/>to Library]
+    C --> D[Build Index]
+    D --> E[Search Similar<br/>Chunks]
 
-```bash
-# generate payloads from a newline-delimited texts file
-python tools/payload_generator.py --texts-file path/to/texts.txt
-
-# or pass texts directly
-python tools/payload_generator.py --text "First text" --text "Second text"
+    style A fill:#e1f5ff
+    style E fill:#e1f5ff
 ```
 
-Outputs:
+### Core Concepts
 
-- `<out-dir>/run_<id>/<doc-name>` — a document payload (POST /documents shape).
-- `<out-dir>/run_<id>/chunk_<i>.json` — one file per chunk (POST /documents/{id}/chunks shape).
+- **Chunk**: A piece of text with its embedding vector and optional metadata (page number, section, etc.)
+- **Document**: A collection of chunks representing a single document
+- **Library**: A collection of documents with a searchable vector index
+- **Vector Index**: Data structure enabling fast k-NN similarity search
 
-## API Endpoints (examples)
+### Basic Usage Flow
 
-- GET /health — health check
-- POST /documents/ — create document
-- GET /documents/{id} — fetch document
-- POST /documents/{id}/chunks — add a chunk
-- POST /libraries - create a library
-- POST /libraries/{lib_id}/documents/{doc_id} - add document
-- PATCH /libraries/{id}/index — build library index
-- POST /libraries/{id}/find-similar — query k-NN
+1. **Create documents** with chunks (text + embeddings)
+2. **Create a library** to organize documents
+3. **Add documents** to the library
+4. **Build the index** to enable searching
+5. **Query for similar chunks** using a query embedding
 
-See full schemas and examples in the OpenAPI docs at `/docs` after starting the server.
+---
 
-## Design notes
+## Architecture
 
-- Index implementations
+### High-Level Overview
 
-  - Brute-force index: O(n) query time, O(n) memory. Simple, exact nearest neighbor by scanning all vectors.
-  - KD-tree index: faster for lower-dimensional data and read-heavy workloads; average query time O(log n) for balanced trees but degrades with high-dimensions.
+The codebase follows **Clean Architecture** with clear separation of concerns:
 
-- Thread-safety
+```mermaid
+graph TB
+    subgraph "Outer Layer"
+        API[API Layer<br/>FastAPI Routes]
+        INFRA[Infrastructure<br/>In-Memory Repos]
+    end
 
-  - In-memory repositories use `threading.RLock` to protect the internal dict store. This prevents simple race conditions during concurrent accesses in a multi-threaded server (uvicorn default workers).
-  - For heavy concurrent usage or multi-process deployment, use an external persistence (SQLite, Postgres) or move to a process-safe store.
+    subgraph "Middle Layer"
+        APP[Application Layer<br/>Commands & Queries]
+    end
 
-- Error handling
-  - Domain vs application errors are separated. `InvalidEntityError` signals client input or domain validation issues (mapped to HTTP 422). `NotFoundError` maps to HTTP 404.
+    subgraph "Core"
+        DOMAIN[Domain Layer<br/>Business Logic]
+    end
 
-## Next steps / improvements
+    API --> APP
+    INFRA --> APP
+    APP --> DOMAIN
 
-- Persistence: add JSON/SQLite persistence to survive restarts.
-- CI: add GitHub Actions to run tests on push/PR.
-- Generate embeddings on demand, with Cohere API
-- Optional: SDK client, temporal durable workflows, and leader-follower replication.
+    style DOMAIN fill:#90EE90
+    style APP fill:#87CEEB
+    style API fill:#FFB6C1
+    style INFRA fill:#FFB6C1
+```
+
+**Dependency Rule**: Inner layers never depend on outer layers. Domain has zero external dependencies.
+
+### Domain Model
+
+The heart of the application contains pure business logic:
+
+```
+domain/
+├── documents/
+│   ├── document.py          # Aggregate root
+│   ├── chunk.py             # Entity
+│   ├── document_id.py       # Value object
+│   └── document_metadata.py # Value object
+├── libraries/
+│   ├── library.py           # Aggregate root
+│   ├── vector_index.py      # Strategy interface
+│   └── indexes/
+│       ├── kd_tree_index.py
+│       └── brute_force_index.py
+└── common/
+    └── embedding.py         # Value object
+```
+
+**Key patterns**:
+
+- **Aggregates** (Document, Library): Enforce business rules and manage entity lifecycles
+- **Value Objects**: Immutable data structures (IDs, embeddings, metadata)
+- **Strategy Pattern**: Pluggable vector index implementations
+
+### Layer Responsibilities
+
+#### 1. Domain Layer (`app/domain/`)
+
+**What**: Pure business logic with no framework dependencies
+**Contains**: Entities, value objects, aggregates, domain services, repository interfaces
+**Example**: `Document.add_chunk()` validates chunk and updates aggregate state
+
+#### 2. Application Layer (`app/application/`)
+
+**What**: Use case orchestration following CQRS pattern
+**Contains**: Commands (writes), Queries (reads), handlers
+**Example**: `CreateDocumentCommand` validates input, constructs domain entities, saves to repository
+
+**CQRS Pattern**:
+
+- **Commands** (`*_command.py`): Mutate state, validate inputs, coordinate writes
+- **Queries** (`*_query.py`): Read-only operations, return DTOs
+
+```
+application/
+├── documents/
+│   ├── create_document_command.py    # Write
+│   ├── add_chunk_command.py          # Write
+│   └── get_document_query.py         # Read
+└── libraries/
+    ├── index_library_command.py      # Write
+    └── find_similar_chunks_query.py  # Read
+```
+
+#### 3. API Layer (`app/api/`)
+
+**What**: HTTP interface using FastAPI
+**Contains**: Routers, request/response models (Pydantic), endpoint handlers
+**Example**: `POST /documents/` validates request, calls command handler, returns response
+
+#### 4. Infrastructure Layer (`app/infrastructure/`)
+
+**What**: Technical implementations of domain interfaces
+**Contains**: Repository implementations, external service adapters
+**Example**: `InMemoryDocumentRepository` implements `DocumentRepository` interface with thread-safe storage
+
+### Architectural Patterns
+
+This project combines complementary patterns for maintainability:
+
+#### 1. **Domain-Driven Design (DDD)**
+
+Business logic lives in the domain layer. Entities enforce invariants.
+
+```python
+# Domain entities validate business rules
+class Document:
+    def add_chunk(self, chunk: Chunk) -> None:
+        if chunk.id in self._chunks:
+            raise InvalidEntityError("Chunk already exists")
+        self._chunks[chunk.id] = chunk
+```
+
+**Benefit**: Business rules are explicit and testable in isolation.
+
+#### 2. **Clean Architecture**
+
+Layers depend inward. Domain is framework-agnostic.
+
+**Benefit**: Can swap FastAPI for Flask, or replace in-memory storage with Postgres, without touching domain logic.
+
+#### 3. **CQRS (Command Query Responsibility Segregation)**
+
+Writes and reads are separated at the application layer.
+
+**Benefit**: Each operation has a single responsibility. Easy to optimize reads independently from writes.
+
+#### 4. **Vertical Slice Architecture**
+
+Features are co-located while respecting layer boundaries.
+
+```
+documents/
+├── api/create_document.py
+├── application/create_document_command.py
+└── domain/document.py
+```
+
+**Benefit**: Adding or changing a feature requires minimal cross-cutting changes.
+
+---
+
+## Vector Index Implementations
+
+The API uses the **Strategy Pattern** to support multiple indexing algorithms:
+
+- **KD-Tree** (default): O(log n) average query time, best for low-dimensional vectors
+- **Brute Force**: O(n) query time, exact results guaranteed for any dimensionality
+
+See [Configuration](#configuration) section for how to select between implementations.
+
+**Why Strategy Pattern?**: Allows swapping index implementations without changing domain logic. New indexing algorithms can be added by implementing the `VectorIndex` interface.
+
+---
+
+## What's Next?
+
+Potential improvements for production use:
+
+- **Persistence**: SQLite/Postgres repositories for data durability
+- **CI/CD**: GitHub Actions for automated testing
+- **On-Demand Embeddings**: Generate embeddings via Cohere API instead of requiring pre-computed vectors
+- **Authentication**: API key or OAuth2 support
+- **Pagination**: Handle large result sets efficiently
+- **Background Jobs**: Async index building for large libraries triggered by domain events
+
+---
+
+## Credits
+
+Created by [**Vinícius Albano**](https://github.com/vinialbano) - 2025
