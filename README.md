@@ -20,13 +20,13 @@ This combination makes it straightforward to add or change features with minimal
 - Domain layer under `app/domain` (value objects, entities, aggregates, indexes).
 - Application layer under `app/application` (commands/queries, handlers).
 - In-memory repositories in `app/infrastructure` (thread-safe with RLock).
-- Custom errors in `app/errors.py` mapped to HTTP statuses (InvalidEntityError -> 422, NotFoundError -> 404).
+- Custom errors in `app/errors.py` mapped to HTTP statuses (InvalidEntityError -> 422, NotFoundError -> 404, IndexNotBuiltError -> 409).
 - Unit tests and integration tests included (`tests/`).
 - Dockerfile and `docker-compose.yml` for local development.
 
 ## Quickstart
 
-Requirements: Python 3.14, Docker (optional)
+Requirements: Python 3.13, Docker (optional)
 
 Run locally (recommended in a virtualenv):
 
@@ -57,6 +57,29 @@ Or build/run the image manually:
 docker build -t vector-db-api:local .
 docker run --rm -p 8000:8000 vector-db-api:local
 ```
+
+## Generating test payloads from Cohere
+
+If you want to generate API-shaped document and chunk payloads from Cohere embeddings (for testing or seeding), there's a small helper in `tools/` that calls Cohere and writes JSON payloads.
+
+Prerequisites:
+
+- Export your Cohere API key: `export COHERE_API_KEY="sk-..."`.
+
+Quick usage:
+
+```bash
+# generate payloads from a newline-delimited texts file
+python tools/payload_generator.py --texts-file path/to/texts.txt
+
+# or pass texts directly
+python tools/payload_generator.py --text "First text" --text "Second text"
+```
+
+Outputs:
+
+- `<out-dir>/run_<id>/<doc-name>` — a document payload (POST /documents shape).
+- `<out-dir>/run_<id>/chunk_<i>.json` — one file per chunk (POST /documents/{id}/chunks shape).
 
 ## API Endpoints (examples)
 
@@ -91,5 +114,5 @@ See full schemas and examples in the OpenAPI docs at `/docs` after starting the 
 - Persistence: add JSON/SQLite persistence to survive restarts.
 - Metadata filtering: expose API support for meta-filtered k-NN queries.
 - CI: add GitHub Actions to run tests on push/PR.
-- Production containerization: tune Dockerfile for multi-worker uvicorn/gunicorn and remove bind-mounts.
+- Generate embeddings on demand, with Cohere API
 - Optional: SDK client, temporal durable workflows, and leader-follower replication.
