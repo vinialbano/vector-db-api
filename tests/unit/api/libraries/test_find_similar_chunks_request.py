@@ -2,7 +2,6 @@ from app.api.libraries.find_similar_chunks import (
     FindSimilarRequest,
     find_similar_chunks,
 )
-
 from app.application.libraries import FindSimilarChunksHandler
 from app.domain.libraries.indexed_chunk import IndexedChunk
 from app.infrastructure import InMemoryLibraryRepository

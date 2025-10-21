@@ -2,7 +2,6 @@ from app.api.libraries.create_library import (
     CreateLibraryRequest,
     create_library,
 )
-
 from app.application.libraries import CreateLibraryHandler
 from app.domain.documents import Document, DocumentMetadata
 from app.domain.documents.document_id import DocumentId

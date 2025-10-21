@@ -2,7 +2,6 @@ from app.api.libraries.update_library import (
     UpdateLibraryRequest,
     update_library,
 )
-
 from app.application.libraries import UpdateLibraryHandler
 from app.infrastructure import InMemoryLibraryRepository
 

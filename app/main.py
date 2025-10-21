@@ -1,14 +1,13 @@
 from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 
-
-from app.api.routers import libraries_router, documents_router
+from app.api.routers import documents_router, libraries_router
 from app.errors import IndexNotBuiltError, InvalidEntityError, NotFoundError
 
 app = FastAPI(
     title="Vector DB API",
     description="An API for managing vector databases, libraries, and documents.",
-    version="1.0.0",
+    version="0.1.0",
 )
 
 app.include_router(documents_router)

@@ -1,5 +1,4 @@
 from app.api.libraries.index_library import index_library
-
 from app.application.libraries import IndexLibraryHandler
 from app.infrastructure import InMemoryLibraryRepository
 

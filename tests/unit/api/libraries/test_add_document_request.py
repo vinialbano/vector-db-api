@@ -1,7 +1,6 @@
 from app.api.libraries.add_document import (
     add_document,
 )
-
 from app.application.libraries import AddDocumentHandler
 from app.infrastructure import (
     InMemoryDocumentRepository,
