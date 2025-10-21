@@ -1,0 +1,454 @@
+### Vector DB API - REST Client tests
+# Usage:
+# - Open this file in VS Code with the REST Client extension installed.
+# - Set an environment or change {{baseUrl}} below to your running server (default: http://localhost:8000).
+# - Place cursor on a request and click "Send Request" or use Cmd/Ctrl+Alt+R.
+
+@baseUrl = http://localhost:8000
+
+### Health check
+GET {{baseUrl}}/health
+
+
+### === Named flow: Create Document, Add Chunk, Chunk lifecycle ===
+### Create document and save document_id to file variable `docId`
+# @name createDocument
+POST {{baseUrl}}/documents/
+Content-Type: application/json
+
+{
+    "metadata": {
+        "title": "My Amazing Document",
+        "author": "Vinícius Albano",
+        "custom_fields": {
+            "category": "test",
+            "tags": ["example", "rest-client"]
+        }
+    }
+}
+###
+@docId = {{createDocument.response.body.document_id}}
+
+### =============================================
+### Add a temporary chunk to the created document
+# @name addTempChunk
+POST {{baseUrl}}/documents/{{docId}}/chunks
+Content-Type: application/json
+
+{
+    "text": "c1",
+    "embedding": [1.0, 0.0],
+    "metadata": {}
+}
+###
+@tempChunkId = {{addTempChunk.response.body.chunk_id}}
+
+### ==========================
+### Update the temporary chunk
+PATCH {{baseUrl}}/documents/{{docId}}/chunks/{{tempChunkId}}
+Content-Type: application/json
+
+{
+  "text": "updated",
+  "metadata": {
+    "custom_fields": {
+        "reviewed": true,
+        "tags": ["updated", "important"]
+    }
+  }
+}
+
+### ===============================
+### Get the updated temporary chunk
+GET {{baseUrl}}/documents/{{docId}}/chunks/{{tempChunkId}}
+
+### ==========================
+### Delete the temporary chunk
+DELETE {{baseUrl}}/documents/{{docId}}/chunks/{{tempChunkId}}
+
+### ===================================
+### Add multiple chunks to the document
+# @name addChunk0
+POST {{baseUrl}}/documents/{{docId}}/chunks
+Content-Type: application/json
+
+< ./test_data/run_1/chunk_0.json
+###
+@chunkId0 = {{addChunk0.response.body.chunk_id}}
+
+### ==============
+# @name addChunk1
+POST {{baseUrl}}/documents/{{docId}}/chunks
+Content-Type: application/json
+
+< ./test_data/run_1/chunk_1.json
+### 
+@chunkId1 = {{addChunk1.response.body.chunk_id}}
+
+### =============
+# @name addChunk2
+POST {{baseUrl}}/documents/{{docId}}/chunks
+Content-Type: application/json
+
+< ./test_data/run_1/chunk_2.json
+###
+@chunkId2 = {{addChunk2.response.body.chunk_id}}
+
+
+### =============
+# @name addChunk3
+POST {{baseUrl}}/documents/{{docId}}/chunks
+Content-Type: application/json
+
+< ./test_data/run_1/chunk_3.json
+###
+@chunkId3 = {{addChunk3.response.body.chunk_id}}
+
+### ==============
+### Get the chunks
+# @name getChunk0
+GET {{baseUrl}}/documents/{{docId}}/chunks/{{chunkId0}}
+###
+@chunk0Embedding = {{getChunk0.response.body.embedding}}
+
+### =============
+# @name getChunk1
+GET {{baseUrl}}/documents/{{docId}}/chunks/{{chunkId1}}
+###
+@chunk1Embedding = {{getChunk1.response.body.embedding}}
+
+### =============
+# @name getChunk2
+GET {{baseUrl}}/documents/{{docId}}/chunks/{{chunkId2}}
+###
+@chunk2Embedding = {{getChunk2.response.body.embedding}}
+
+
+### =============
+# @name getChunk3
+GET {{baseUrl}}/documents/{{docId}}/chunks/{{chunkId3}}
+###
+@chunk3Embedding = {{getChunk3.response.body.embedding}}
+
+### ================
+### = Library flow =
+### ================
+
+### Create a library
+# @name createLibrary
+POST {{baseUrl}}/libraries/
+Content-Type: application/json
+
+{
+  "metadata": {
+    "name": "My Amazing Library",
+    "description": "A collection of amazing documents",
+    "custom_fields": {}
+  },
+  "documents": ["{{docId}}"]
+}
+###
+@libId = {{createLibrary.response.body.library_id}}
+
+### =======================
+### Create another document
+# @name createDocForLibrary
+POST {{baseUrl}}/documents/
+Content-Type: application/json
+
+< ./test_data/run_2/doc_payload.json
+###
+@docId2 = {{createDocForLibrary.response.body.document_id}}
+
+### =======================
+### Add the second document
+POST {{baseUrl}}/libraries/{{libId}}/documents/{{docId2}}
+
+### ===============
+### Get the library
+GET {{baseUrl}}/libraries/{{libId}}
+
+### =================
+### Index the library
+PATCH {{baseUrl}}/libraries/{{libId}}/index
+
+### =======================
+### Find similar embeddings
+### ---
+### Embedding Text: Time is an illusion.
+### ---
+POST {{baseUrl}}/libraries/{{libId}}/find-similar
+Content-Type: application/json
+
+{
+  "k": 1,
+  "embedding": [
+    -0.058014095,
+    -0.010915021,
+    -0.08313359,
+    0.022876691,
+    -0.029605128,
+    0.0063546365,
+    -0.06399492,
+    -0.015624929,
+    -0.09509527,
+    0.008933871,
+    0.046351466,
+    0.06698535,
+    -0.121410936,
+    -0.13875535,
+    0.023175733,
+    0.018690106,
+    0.016372534,
+    0.08971251,
+    -0.081937425,
+    -0.06638726,
+    -0.062200677,
+    0.05442559,
+    0.064892046,
+    -0.050837092,
+    0.064293966,
+    0.016522054,
+    -0.019886274,
+    -0.022428127,
+    0.06638726,
+    0.0139054395,
+    0.005868694,
+    -0.0075881835,
+    0.019886274,
+    0.020185316,
+    -0.08851634,
+    -0.0023829886,
+    -0.059210256,
+    -0.04724859,
+    0.04814572,
+    0.09629144,
+    0.027810879,
+    0.030352734,
+    0.008859111,
+    0.048743796,
+    0.0595093,
+    0.08911443,
+    0.028259441,
+    0.017718222,
+    -0.08373168,
+    -0.0016073491,
+    -0.021231962,
+    -0.004018373,
+    -0.0938991,
+    -0.05352847,
+    -0.049640924,
+    0.10705694,
+    0.02422238,
+    -0.032745067,
+    -0.0559208,
+    0.09330101,
+    -0.056518883,
+    -0.008560069,
+    0.009195533,
+    0.033492673,
+    -0.01584921,
+    0.055322714,
+    -0.06728438,
+    0.022577649,
+    0.016970618,
+    0.030801296,
+    -0.021830043,
+    0.063695885,
+    -0.046650507,
+    0.021680525,
+    0.12918602,
+    0.018241545,
+    -0.039473508,
+    -0.12978409,
+    -0.03289459,
+    0.0066910586,
+    -0.03169842,
+    0.032595545,
+    -0.018241545,
+    -0.006466777,
+    0.08911443,
+    -0.028259441,
+    -0.040071588,
+    -0.07834893,
+    -0.063695885,
+    -0.04724859,
+    0.014354003,
+    -0.007363902,
+    0.21770236,
+    -0.10346843,
+    0.019437712,
+    -0.040370632,
+    -0.13516685,
+    0.069377676,
+    -0.015923971,
+    0.016821096,
+    0.03633357,
+    -0.04724859,
+    0.09629144,
+    0.021531004,
+    -0.018017262,
+    -0.01599873,
+    -0.038127817,
+    -0.042463925,
+    -0.073863305,
+    0.022577649,
+    0.066088215,
+    -0.075059466,
+    0.03708117,
+    -0.20454453,
+    0.06907863,
+    0.010017897,
+    -0.056219842,
+    0.1118416,
+    -0.081339344,
+    -0.04814572,
+    -0.07655468,
+    0.003850162,
+    -0.034090757,
+    0.017194899,
+    0.0004018373,
+    0.07476042,
+    -0.0076255635,
+    -0.09928185,
+    -0.100478016,
+    -0.075059466,
+    -0.023624295,
+    -0.017194899,
+    0.004354795,
+    0.0088217305,
+    -0.063695885,
+    -0.019437712,
+    -0.05741601,
+    -0.026614713,
+    0.102272265,
+    -0.0938991,
+    -0.025418546,
+    0.01741918,
+    0.03663261,
+    -0.04844476,
+    -0.034539316,
+    0.017194899,
+    0.059210256,
+    -0.09808568,
+    -0.005083709,
+    0.036034524,
+    0.01233547,
+    0.09629144,
+    0.080143176,
+    0.023624295,
+    -0.09629144,
+    -0.025269024,
+    0.08971251,
+    0.028408963,
+    -0.0139054395,
+    -0.07177001,
+    0.14712852,
+    -0.07236809,
+    0.06279876,
+    0.10705694,
+    -0.014503524,
+    -0.07147097,
+    -0.006504157,
+    -0.09688952,
+    -0.07715276,
+    -0.09270293,
+    0.036931653,
+    -0.01913867,
+    -0.03857638,
+    0.00086908997,
+    0.09090868,
+    -0.07476042,
+    -0.074461386,
+    -0.0056817923,
+    0.041566797,
+    -0.0076255635,
+    0.0064293966,
+    -0.024371898,
+    0.046351466,
+    -0.068181515,
+    -0.09509527,
+    0.0054575107,
+    0.1333726,
+    0.009569335,
+    -0.004709907,
+    0.020185316,
+    -0.020633878,
+    0.13456877,
+    -0.04425817,
+    0.049939964,
+    0.008597449,
+    0.07266714,
+    -0.13935344,
+    -0.06698535,
+    0.015923971,
+    -0.051734217,
+    0.008522689,
+    0.076255634,
+    -0.024820462,
+    0.017867742,
+    -0.063097805,
+    -0.049640924,
+    -0.025717586,
+    -0.11423393,
+    0.080741264,
+    -0.00044856258,
+    -0.0523323,
+    -0.0066910586,
+    0.07834893,
+    -0.06130355,
+    -0.050837092,
+    0.02108244,
+    -0.05980834,
+    0.09330101,
+    0.004859428,
+    0.09569335,
+    0.015624929,
+    -0.05053805,
+    -0.03738021,
+    0.112439685,
+    -0.055621758,
+    -0.0595093,
+    -0.0006354636,
+    -0.124999434,
+    -0.04425817,
+    -0.0702748,
+    0.07595659,
+    0.12798984,
+    0.049939964,
+    0.13098027,
+    -0.030203212,
+    0.035436444,
+    0.0139054395,
+    -0.014428763,
+    0.11423393,
+    0.07356426,
+    -0.034240276,
+    -0.07416234,
+    -0.024371898,
+    0.052930385,
+    0.022876691,
+    -0.014503524,
+    -0.03633357,
+    -0.010167418,
+    -0.081339344,
+    0.07147097,
+    0.071171924,
+    0.009868377,
+    -0.039772548,
+    -0.011886909,
+    0.056219842,
+    -0.014802564
+  ]
+}
+
+### ============================
+### Find other similar embeddings
+POST {{baseUrl}}/libraries/{{libId}}/find-similar
+Content-Type: application/json
+
+{
+  "embedding": {{chunk1Embedding}},
+  "k": 5,
+  "min_similarity": 0.358
+}
